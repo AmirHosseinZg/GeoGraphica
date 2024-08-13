@@ -20,17 +20,33 @@ def plot_graph():
         # Calculate the function
         Z = np.cos(X) + np.cos(Y)
 
-        # Plot the contour
+        # Plot the filled contour
         fig, ax = plt.subplots()
-        ax.contour(X, Y, Z, levels=int(contours.get()), cmap='viridis')  # levels define the number of contours
-        # Add a colorbar
-        ax.plot(x, y)
+        """plt.subplot() return an figure object and an axis object . fig represents the overall shape and ax represents
+        the area in which the graph is drawn """
+
+        # The following line of code creates a filled contour plot
+        contour_filled = ax.contourf(X, Y, Z, levels=int(contours.get()), cmap='viridis')
+        """cmap='viridis': the colormap used to fill the areas between the contour lines. viridis is one of matplotlib's
+         default options, which has a yellow-green-blue color spectrum."""
+
+        # Add contour lines on top
+        contour_lines = ax.contour(X, Y, Z, levels=int(contours.get()), colors='black', linewidths=0.5)
+        """colors='black': makes the color of contours lines black 
+        linewidths=0.5: specifies the thickness of the contour lines , which here is equal to 0.5 units
+        Output: This function creates a QuadContourSet object named contour_lines that represents the contour lines."""
+
+        # Add a colorbar to show the mapping of values to colors
+        fig.colorbar(contour_filled, ax=ax, label='Function Value')
+
+        # Set labels and title
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_title(
-            f' ContourPlot [Cos(x) + Cos(y) , (x,{x_lower_bound.get()},{x_upper_bound.get()}) , (y,{y_lower_bound.get()},{y_upper_bound.get()}) , contours -> 10 ]')
+            f' ContourPlot [Cos(x) + Cos(y) , (x,{x_lower_bound.get()},{x_upper_bound.get()}) , (y,{y_lower_bound.get()},{y_upper_bound.get()}) , contours -> {contours.get()} ]')
         ax.grid(True)
 
+        # Display the plot in the Tkinter window
         canvas = FigureCanvasTkAgg(fig, master=window)
         canvas.draw()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
