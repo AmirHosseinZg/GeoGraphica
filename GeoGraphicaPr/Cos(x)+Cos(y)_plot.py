@@ -62,9 +62,12 @@ window.title("Cos(x) + Cos(y) Plotter")
 
 # Create input fields
 frame = ttk.Frame(window, padding="100")
+
+# Expand to fill all available space in both width (fill=tk.X) and height (fill=tk.Y).
+# Take up any extra space in the parent container when the window is resized (expand=True).
 frame.pack(fill=tk.BOTH, expand=True)
 
-# # GUI background
+# GUI background
 # image = PhotoImage(file="H:\Zakeri\Samadi_pr\GeoGraphica\Sources\\test_plot_darkmod.png")
 # ttk.Label(frame, image=image).place(x=0, y=0)
 
