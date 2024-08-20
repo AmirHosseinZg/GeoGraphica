@@ -1,9 +1,10 @@
+import Constant
+import EGM96_data
 import tkinter as tk
-from tkinter import ttk
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import Constant
+from tkinter import ttk
 
 
 def on_closing():
@@ -11,27 +12,6 @@ def on_closing():
     exit()  # this will terminate the program
 
 
-def sigma_c(n, m):
-    return
-    # TODO : implementation
-
-
-def sigma_s(n, m):
-    return
-    # TODO : implementation
-
-
-def Txx(r, phi, landa):
-    constants = Constant.Constants()
-    part_one = (1 / constants.EOTVOS) * (constants.Gm() / pow(constants.A(), 3))
-
-    part_two = 0
-    for n in range(2, constants.Nmax() + 1):
-        for m in range(0, n + 1):
-            part_two += pow((constants.A() / r), n + 3) * (
-                        (sigma_c(n, m) * np.cos(m * landa)) + (sigma_s(n, m) * np.sin(m * landa)))
-
-    part_three = None # TODO
 
 def plot_graph():
     try:
