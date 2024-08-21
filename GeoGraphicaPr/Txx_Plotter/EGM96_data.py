@@ -19,10 +19,10 @@ with open(csv_file_path, mode='r', newline='') as file:
 
         try:
             # Extract and convert data
-            n = int(row[0])
-            m = int(row[1])
-            C_nm = int(row[2])
-            S_nm = int(row[3])
+            n = int(row[0])  # First column: n
+            m = int(row[1])  # Second column: m
+            C_nm = float(row[2])  # Third column: C_nm (should be float)
+            S_nm = float(row[3])  # Fourth column: S_nm (should be float)
 
             # Initialize nested dictionaries if needed
             if n not in data:
@@ -31,3 +31,5 @@ with open(csv_file_path, mode='r', newline='') as file:
 
         except ValueError as e:
             print(f"Error processing row {row}: {e}")
+
+# Now `data` dictionary contains your EGM96 coefficients with (n, m) as keys
