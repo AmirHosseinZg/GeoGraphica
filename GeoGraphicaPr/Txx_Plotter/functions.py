@@ -1,5 +1,5 @@
 import math
-
+import numpy as np
 from GeoGraphicaPr.Txx_Plotter import EGM96_data, Constant
 
 EGM96_data_dictionary = EGM96_data.data
@@ -59,13 +59,29 @@ def c_nm(n, m):
     return result
 
 
+def legendre(n, m, t):
+    r = (n - m) // 2  # it is equals : r <= (n-m)/2
+
+    summation = sum(pow(-1, k) * (pow(((math.factorial(2 * n - 2 * k)) / (
+            math.factorial(k) * math.factorial(n - k) * math.factorial(n - m - 2 * k))), pow(t, n - m - 2 * k)))
+                    for k in range(0, r + 1))
+
+    result = pow(2, -1 * n) * pow(1 - t ** 2, m / 2) * summation
+
+    return result
+
+
 def Txx_function(r, phi, landa):
-    part_one = (1 / constants.EOTVOS) * (constants.Gm() / pow(constants.A(), 3))
+    part_one = (1 / constants.EOTVOS) * (constants.Gm() / pow(constants.A(), -3))
 
     part_two = 0
     for n in range(2, constants.Nmax() + 1):
         for m in range(0, n + 1):
             part_two += pow((constants.A() / r), n + 3) * (
-                    (C_nm(n, m) * np.cos(m * landa)) + (S_nm(n, m) * np.sin(m * landa)))
+                    (C_nm(n, m) * np.cos(m * landa)) + (S_nm(n, m) * np.sin(m * landa))) * (
+                                (a_nm(n, m) * legendre(n, m - 2, np.sin(phi))) + (
+                                (b_nm(n, m) - (n + 1) * (n + 2)) * legendre(n, m, np.sin(phi))) + (
+                                        c_nm(n, m) * legendre(n, m + 2, np.sin(phi))))
 
-    part_three = None  # TODO
+    result = part_one * part_two
+    return result
