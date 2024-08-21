@@ -14,12 +14,22 @@ def on_closing():
 def plot_graph():
     try:
         # Define the range for x and y
-        phi = np.linspace(int(longitude_lowerbound.get()), int(longitude_upperbound.get()), 1000)
-        landa = np.linspace(int(latitude_lowerbound.get()), int(latitude_upperbound.get()), 1000)
+        longitude_lowerbound_int = int(longitude_lowerbound.get())
+        longitude_upperbound_int = int(longitude_upperbound.get())
+        latitude_lowerbound_int = int(latitude_lowerbound.get())
+        latitude_upperbound_int = int(latitude_upperbound.get())
+
+        resolution_float = float(resolution.get())
+
+        longitude_range = float(longitude_upperbound_int - longitude_lowerbound_int)
+        latitude_range = float(latitude_upperbound_int - latitude_lowerbound_int)
+
+        phi = np.linspace(longitude_lowerbound_int, longitude_upperbound_int, int(longitude_range / resolution_float))
+        landa = np.linspace(latitude_lowerbound_int, latitude_upperbound_int, int(latitude_range / resolution_float))
         phi, landa = np.meshgrid(phi, landa)
 
         # Calculate the function
-        r = int(radius.get())
+        r = float(radius.get())
 
         Z = functions.Txx_function(r=r, phi=phi, landa=landa)
 
