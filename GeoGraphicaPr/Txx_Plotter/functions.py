@@ -18,17 +18,21 @@ def S_nm(n, m):
 
 def a_nm(n, m):
     if abs(m) == 0 or abs(m) == 1:
-        result = 70
+        return 70
     elif 2 <= abs(m) <= n:
-        if abs(m) == 2:
-            result = ((math.sqrt(2) / 4) * (math.sqrt(pow(n, 2) - pow((abs(m) - 1), 2))) * (math.sqrt(n + abs(m))) * (
-                math.sqrt(n - abs(m) + 2)))
-        else:
-            result = ((1 / 4) * (math.sqrt(pow(n, 2) - pow((abs(m) - 1), 2))) * (math.sqrt(n + abs(m))) * (
-                math.sqrt(n - abs(m) + 2)))
+        sqrt_term_1 = pow(n, 2) - pow((abs(m) - 1), 2)
+        sqrt_term_2 = n - abs(m) + 2
+        if sqrt_term_1 < 0 or sqrt_term_2 < 0:
+            raise ValueError(f"Invalid sqrt input at n={n}, m={m} in a_nm function")
 
+        if abs(m) == 2:
+            result = ((math.sqrt(2) / 4) * (math.sqrt(sqrt_term_1)) *
+                      (math.sqrt(n + abs(m))) * (math.sqrt(sqrt_term_2)))
+        else:
+            result = ((1 / 4) * (math.sqrt(sqrt_term_1)) *
+                      (math.sqrt(n + abs(m))) * (math.sqrt(sqrt_term_2)))
     else:
-        raise Exception("invalid argument ; a_nm()")
+        raise ValueError(f"Invalid argument for a_nm() with n={n}, m={m}")
 
     return result
 
@@ -37,28 +41,36 @@ def b_nm(n, m):
     if abs(m) == 0 or abs(m) == 1:
         result = (((n + abs(m) + 1) * (n + abs(m) + 2)) / 2 * (abs(m) + 1))
     elif 2 <= abs(m) <= n:
-        result = (pow(n, 2) + pow(m, 2) + 3 * n + 2) / 2
-
+        sqrt_term = pow(n, 2) + pow(m, 2) + 3 * n + 2
+        if sqrt_term < 0:
+            raise ValueError(f"Invalid sqrt input at n={n}, m={m} in b_nm function")
+        result = sqrt_term / 2
     else:
-        raise Exception("invalid argument ; b_nm()")
+        raise ValueError(f"Invalid argument for b_nm() with n={n}, m={m}")
 
     return result
 
 
 def c_nm(n, m):
+    if m == n:
+        return 0
+    sqrt_term_1 = pow(n, 2) - pow((abs(m) + 1), 2)
+    sqrt_term_2 = n + abs(m) + 2
+    if sqrt_term_1 < 0 or sqrt_term_2 < 0:
+        raise ValueError(f"Invalid sqrt input at n={n}, m={m} in c_nm function")
+
     if abs(m) == 0 or abs(m) == 1:
         if abs(m) == 0:
-            result = ((math.sqrt(2) / 4) * (math.sqrt(pow(n, 2) - pow((abs(m) + 1), 2))) * (math.sqrt(n - abs(m))) * (
-                math.sqrt(n + abs(m) + 2)))
+            result = ((math.sqrt(2) / 4) * (math.sqrt(sqrt_term_1)) *
+                      (math.sqrt(n - abs(m))) * (math.sqrt(sqrt_term_2)))
         else:
-            result = ((1 / 4) * (math.sqrt(pow(n, 2) - pow((abs(m) + 1), 2))) * (math.sqrt(n - abs(m))) * (
-                math.sqrt(n + abs(m) + 2)))
-
+            result = ((1 / 4) * (math.sqrt(sqrt_term_1)) *
+                      (math.sqrt(n - abs(m))) * (math.sqrt(sqrt_term_2)))
     elif 2 <= abs(m) <= n:
-        result = ((1 / 4) * (math.sqrt(pow(n, 2) - pow((abs(m) + 1), 2))) * (math.sqrt(n - abs(m))) * (
-            math.sqrt(n + abs(m) + 2)))
+        result = ((1 / 4) * (math.sqrt(sqrt_term_1)) *
+                  (math.sqrt(n - abs(m))) * (math.sqrt(sqrt_term_2)))
     else:
-        raise Exception("invalid argument ; c_nm()")
+        raise ValueError(f"Invalid argument for c_nm() with n={n}, m={m}")
 
     return result
 
@@ -94,7 +106,10 @@ def Txx_function(r, phi, landa):
     try:
         part_one = (1 / constants.EOTVOS) * (constants.Gm() / pow(constants.A(), -3))
 
-        part_two = 0
+        # Initialize part_two as a standard float array
+        part_two = np.zeros_like(phi, dtype=float)
+
+        # Iterate over n and m
         for n in range(2, constants.Nmax() + 1):
             for m in range(0, n + 1):
                 try:
@@ -102,26 +117,28 @@ def Txx_function(r, phi, landa):
                     C = C_nm(n, m)
                     S = S_nm(n, m)
 
-                    # Check if values are within a valid range before calculating
-                    if n < m or m < 0:
-                        raise ValueError(f"Invalid n and m values: n={n}, m={m}")
+                    # Calculate the coefficients a, b, c using mpmath
+                    a = float(a_nm(n, m))
+                    b = float(b_nm(n, m))
+                    c = float(c_nm(n, m))
 
                     # Ensure the inputs to sqrt and other functions are valid
                     if n ** 2 - (m - 1) ** 2 < 0 or n - m + 2 < 0:
                         raise ValueError(f"Math domain error at n={n}, m={m}")
 
-                    a = a_nm(n, m)
-                    b = b_nm(n, m)
-                    c = c_nm(n, m)
+                    # Convert phi and landa to Python float if they are scalar, or process element-wise if they are arrays
+                    phi_flat = np.ravel(phi)
+                    landa_flat = np.ravel(landa)
 
-                    # Check for large results before performing operations
-                    if abs(a) > 1e308 or abs(b) > 1e308 or abs(c) > 1e308:
-                        raise OverflowError(f"Value too large to handle at n={n}, m={m}")
+                    # Calculate the Legendre functions element-wise
+                    legendre_m_2 = np.array([float(P_nm(n, m - 2, np.sin(p))) for p in phi_flat])
+                    legendre_m = np.array([float(P_nm(n, m, np.sin(p))) for p in phi_flat])
+                    legendre_m_2_plus = np.array([float(P_nm(n, m + 2, np.sin(p))) for p in phi_flat])
 
-                    # Calculate Legendre functions
-                    legendre_m_2 = P_nm(n, m - 2, np.sin(phi))
-                    legendre_m = P_nm(n, m, np.sin(phi))
-                    legendre_m_2_plus = P_nm(n, m + 2, np.sin(phi))
+                    # Reshape back to the original shape
+                    legendre_m_2 = legendre_m_2.reshape(phi.shape)
+                    legendre_m = legendre_m.reshape(phi.shape)
+                    legendre_m_2_plus = legendre_m_2_plus.reshape(phi.shape)
 
                     # Accumulate part_two
                     part_two += (pow((constants.A() / r), n + 3) *
@@ -129,6 +146,7 @@ def Txx_function(r, phi, landa):
                                  ((a * legendre_m_2) +
                                   ((b - (n + 1) * (n + 2)) * legendre_m) +
                                   (c * legendre_m_2_plus)))
+
                 except KeyError as ke:
                     print(f"KeyError: n={n}, m={m} - {ke}")
                 except ValueError as ve:
@@ -138,7 +156,9 @@ def Txx_function(r, phi, landa):
                 except Exception as e:
                     print(f"Error in iteration n={n}, m={m}: {e}")
 
+        # Final result
         result = part_one * part_two
         return result
+
     except Exception as e:
         print(f"Error during calculating Txx function value: {e}")
