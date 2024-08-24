@@ -2,7 +2,8 @@ import tkinter as tk
 import matplotlib.pyplot as plt
 import numpy as np
 import functions
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import math
+from tkinter import filedialog, messagebox
 from tkinter import ttk
 
 
@@ -31,45 +32,47 @@ def plot_graph():
         # Calculate the function
         r = float(radius.get())
 
-        Z = functions.Txx_function(r=r, phi=phi, landa=landa)
+        Z = functions.Txx_function(r=r, phi=phi * (math.pi / 180), landa=landa * (math.pi / 180))
 
         # Plot the filled contour
+        global fig
         fig, ax = plt.subplots()
-        """plt.subplot() return an figure object and an axis object . fig represents the overall shape and ax represents
-        the area in which the graph is drawn """
 
-        # The following line of code creates a filled contour plot
+        # Create a filled contour plot
         contour_filled = ax.contourf(phi, landa, Z, levels=int(contours.get()), cmap=selected_colormap.get())
-        """cmap='viridis': the colormap used to fill the areas between the contour lines. viridis is one of matplotlib's
-         default options, which has a yellow-green-blue color spectrum."""
 
         # Add contour lines on top
         contour_lines = ax.contour(phi, landa, Z, levels=int(contours.get()), colors='black', linewidths=0.5)
-        """colors='black': makes the color of contours lines black 
-        linewidths=0.5: specifies the thickness of the contour lines , which here is equal to 0.5 units
-        Output: This function creates a QuadContourSet object named contour_lines that represents the contour lines."""
 
         # Add a colorbar to show the mapping of values to colors
         colorbar = fig.colorbar(contour_filled, ax=ax, label='Function Value')
-        # colorbar limits
         colorbar.set_ticks([float(Colorbar_lower_bound.get()), float(Colorbar_upper_bound.get())])
-        # Set labels and title
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_title("Txx")
         ax.grid(True)
 
-        # Display the plot in the Tkinter window
-        canvas = FigureCanvasTkAgg(fig, master=window)
-        canvas.draw()
-        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+        # Notify the user that the plot has been generated and will be saved
+        messagebox.showinfo("Plot Generated", "The plot has been generated. Selecting a location to save it now.")
+
+        # Open the save file dialog and automatically save the plot
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".png",
+            filetypes=[("PNG files", "*.png"), ("JPEG files", "*.jpg"), ("All files", "*.*")],
+            title="Save the plot"
+        )
+        if file_path:
+            # Save the figure
+            fig.savefig(file_path)
+            messagebox.showinfo("Saved", f"Plot saved successfully as {file_path}")
+
     except ValueError:
         error_label.config(text="Please enter valid numeric values.")
 
 
 # create the main window
 window = tk.Tk()
-window.title = "Txx Plotter"
+window.title("Txx Plotter")
 
 # create the input frame
 frame = ttk.Frame(window, padding=100)
@@ -111,15 +114,6 @@ ttk.Label(frame, text="to ").grid(row=5, column=2, padx=5, pady=5)
 Colorbar_upper_bound = ttk.Entry(frame)
 Colorbar_upper_bound.grid(row=5, column=3, padx=5, pady=5, sticky="ew")
 
-# Create a list of colormaps available in matplotlib
-colormaps = plt.colormaps()
-# A variable to hold the selected color map
-selected_colormap = tk.StringVar(window)
-# set the default value for selected_colormap
-selected_colormap.set(colormaps[0])
-# Create a selection menu
-ttk.OptionMenu(frame, selected_colormap, *colormaps).grid(row=4, column=0, padx=5, pady=5, sticky="ew")
-
 # Create plot button
 plot_button = ttk.Button(frame, text="Plot", command=plot_graph)
 plot_button.grid(row=6, column=1, pady=5, columnspan=2)
@@ -127,6 +121,15 @@ plot_button.grid(row=6, column=1, pady=5, columnspan=2)
 # Create error label
 error_label = ttk.Label(frame, text="", foreground="red")
 error_label.grid(row=7, column=0, columnspan=4, pady=5)
+
+# Create a list of colormaps available in matplotlib
+colormaps = plt.colormaps()
+# A variable to hold the selected color map
+selected_colormap = tk.StringVar(window)
+# set the default value for selected_colormap
+selected_colormap.set(colormaps[0])
+# Create a selection menu
+ttk.OptionMenu(frame, selected_colormap, *colormaps).grid(row=6, column=0, padx=5, pady=5, sticky="ew")
 
 # Configure rows and columns to be resizable
 frame.grid_rowconfigure(0, weight=1)
@@ -141,6 +144,8 @@ frame.grid_columnconfigure(0, weight=1)
 frame.grid_columnconfigure(1, weight=1)
 frame.grid_columnconfigure(2, weight=1)
 frame.grid_columnconfigure(3, weight=1)
+
+fig = None  # Global variable to hold the figure object
 
 window.protocol("WM_DELETE_WINDOW", on_closing)
 
