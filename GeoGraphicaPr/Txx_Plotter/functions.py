@@ -2,10 +2,15 @@ import math
 import numpy as np
 from mpmath import mp, factorial, power
 from GeoGraphicaPr.Txx_Plotter import EGM96_data, Constant
+from decimal import Decimal, getcontext, InvalidOperation
 
 EGM96_data_dictionary = EGM96_data.data
+
 constants = Constant.Constants()
-mp.dps = 50  # Decimal places of precision
+EOTVOS = Decimal(constants.EOTVOS)
+Gm = Decimal(constants.Gm())
+A = Decimal(constants.A())
+Nmax = constants.Nmax()
 
 
 def C_nm(n, m):
@@ -104,23 +109,26 @@ def P_nm(n, m, t):
 
 def Txx_function(r, phi, landa):
     try:
-        part_one = (1 / constants.EOTVOS) * (constants.Gm() / pow(constants.A(), -3))
+        # Set the precision for Decimal operations
+        getcontext().prec = 1000
 
-        # Initialize part_two as a standard float array
-        part_two = np.zeros_like(phi, dtype=float)
+        part_one = Decimal(1) / EOTVOS * (Gm / A ** -3)
+
+        # Initialize part_two as a list of Decimals
+        part_two = np.zeros_like(phi, dtype=object)
 
         # Iterate over n and m
-        for n in range(2, constants.Nmax() + 1):
+        for n in range(2, Nmax + 1):
             for m in range(0, n + 1):
                 try:
                     # Fetch coefficients
-                    C = C_nm(n, m)
-                    S = S_nm(n, m)
+                    C = Decimal(C_nm(n, m))
+                    S = Decimal(S_nm(n, m))
 
-                    # Calculate the coefficients a, b, c using mpmath
-                    a = float(a_nm(n, m))
-                    b = float(b_nm(n, m))
-                    c = float(c_nm(n, m))
+                    # Calculate the coefficients a, b, c using mpmath and convert to Decimal
+                    a = Decimal(float(a_nm(n, m)))
+                    b = Decimal(float(b_nm(n, m)))
+                    c = Decimal(float(c_nm(n, m)))
 
                     # Ensure the inputs to sqrt and other functions are valid
                     if n ** 2 - (m - 1) ** 2 < 0 or n - m + 2 < 0:
@@ -131,22 +139,40 @@ def Txx_function(r, phi, landa):
                     landa_flat = np.ravel(landa)
 
                     # Calculate the Legendre functions element-wise
-                    legendre_m_2 = np.array([float(P_nm(n, m - 2, np.sin(p))) for p in phi_flat])
-                    legendre_m = np.array([float(P_nm(n, m, np.sin(p))) for p in phi_flat])
-                    legendre_m_2_plus = np.array([float(P_nm(n, m + 2, np.sin(p))) for p in phi_flat])
+                    legendre_m_2 = [Decimal(float(P_nm(n, m - 2, np.sin(p)))) for p in phi_flat]
+                    legendre_m = [Decimal(float(P_nm(n, m, np.sin(p)))) for p in phi_flat]
+                    legendre_m_2_plus = [Decimal(float(P_nm(n, m + 2, np.sin(p)))) for p in phi_flat]
 
-                    # Reshape back to the original shape
-                    legendre_m_2 = legendre_m_2.reshape(phi.shape)
-                    legendre_m = legendre_m.reshape(phi.shape)
-                    legendre_m_2_plus = legendre_m_2_plus.reshape(phi.shape)
+                    # Convert back to NumPy arrays
+                    legendre_m_2 = np.array(legendre_m_2).reshape(phi.shape)
+                    legendre_m = np.array(legendre_m).reshape(phi.shape)
+                    legendre_m_2_plus = np.array(legendre_m_2_plus).reshape(phi.shape)
+
+                    # Compute the power term
+                    ratio = Decimal(A) / Decimal(r)
+                    power_term = Decimal(pow(ratio, n + 3))
+
+                    # Calculate the term involving trigonometric functions
+                    cos_term = [Decimal(np.cos(float(m * l))) for l in landa_flat]
+                    sin_term = [Decimal(np.sin(float(m * l))) for l in landa_flat]
+
+                    cos_term = np.array(cos_term).reshape(landa.shape)
+                    sin_term = np.array(sin_term).reshape(landa.shape)
 
                     # Accumulate part_two
-                    part_two += (pow((constants.A() / r), n + 3) *
-                                 ((C * np.cos(m * landa)) + (S * np.sin(m * landa))) *
-                                 ((a * legendre_m_2) +
-                                  ((b - (n + 1) * (n + 2)) * legendre_m) +
-                                  (c * legendre_m_2_plus)))
+                    term = power_term * (
+                            (C * cos_term) + (S * sin_term)
+                    ) * (
+                                   (a * legendre_m_2) +
+                                   ((b - (n + 1) * (n + 2)) * legendre_m) +
+                                   (c * legendre_m_2_plus)
+                           )
 
+                    # Safeguard against invalid Decimal operations
+                    part_two += term
+
+                except InvalidOperation as ioe:
+                    print(f"InvalidOperation: n={n}, m={m} - {ioe}")
                 except KeyError as ke:
                     print(f"KeyError: n={n}, m={m} - {ke}")
                 except ValueError as ve:
