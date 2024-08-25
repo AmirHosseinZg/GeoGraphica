@@ -1,6 +1,5 @@
 import math
 import numpy as np
-from mpmath import mp, factorial, power
 from GeoGraphicaPr.Txx_Plotter import EGM96_data, Constant
 from decimal import Decimal, getcontext, InvalidOperation
 
@@ -91,7 +90,7 @@ def P_nm(n, m, t):
     r_max = (n - m) // 2
 
     # Initialize the sum
-    sum_result = mp.mpf(0)
+    sum_result = 0
 
     # Compute the sum
     for k in range(r_max + 1):
@@ -100,14 +99,14 @@ def P_nm(n, m, t):
             continue  # Skip this term since factorial of a negative number is not defined
 
         # Compute the numerator and denominator using mpmath functions
-        numerator = power(-1, k) * factorial(2 * n - 2 * k)
-        denominator = factorial(k) * factorial(n - k) * factorial(n - m - 2 * k)
+        numerator = pow(-1, k) * math.factorial(2 * n - 2 * k)
+        denominator = math.factorial(k) * math.factorial(n - k) * math.factorial(n - m - 2 * k)
 
         # Add the term to the sum
-        sum_result += (numerator / denominator) * power(t, n - m - 2 * k)
+        sum_result += (numerator / denominator) * pow(t, n - m - 2 * k)
 
     # Compute the prefactor using mpmath
-    prefactor = power(2, -n) * power(1 - t ** 2, m / 2)
+    prefactor = pow(2, -n) * pow(1 - t ** 2, m / 2)
 
     # Final result
     return prefactor * sum_result
@@ -118,10 +117,9 @@ def Txx_function(r, phi, landa):
         # Set the precision for Decimal operations
         getcontext().prec = 1000
 
-        part_one = Decimal(1) / EOTVOS * (Gm / A ** -3)
+        part_one = Decimal(1 / EOTVOS * (Gm / A ** -3))
 
-        # Initialize part_two as a list of Decimals
-        part_two = np.zeros_like(phi, dtype=object)
+        part_two = Decimal(0)
 
         ratio = Decimal(A) / Decimal(r)
 
@@ -138,59 +136,38 @@ def Txx_function(r, phi, landa):
                     b = Decimal(float(b_nm(n, m)))
                     c = Decimal(float(c_nm(n, m)))
 
-                    # Ensure the inputs to sqrt and other functions are valid
-                    if n ** 2 - (m - 1) ** 2 < 0 or n - m + 2 < 0:
-                        raise ValueError(f"Math domain error at n={n}, m={m}")
-
-                    # Convert phi and landa to Python float if they are scalar, or process element-wise if they are arrays
-                    phi_flat = np.ravel(phi)
-                    landa_flat = np.ravel(landa)
-
-                    # Calculate the Legendre functions element-wise
+                    # Calculate the Legendre functions element
                     if n in legendre_data and m - 2 in legendre_data[n]:
                         legendre_m_2 = retrieve_legendre_data(n, m - 2)
                     else:
-                        legendre_m_2 = [Decimal(float(P_nm(n, m - 2, np.sin(p)))) for p in phi_flat]
+                        legendre_m_2 = Decimal(float(P_nm(n, m - 2, np.sin(phi))))
                         legendre_data[n] = {}
                         legendre_data[n][m - 2] = legendre_m_2
 
                     if n in legendre_data and m in legendre_data[n]:
                         legendre_m = retrieve_legendre_data(n, m)
                     else:
-                        legendre_m = [Decimal(float(P_nm(n, m, np.sin(p)))) for p in phi_flat]
+                        legendre_m = Decimal(float(P_nm(n, m, np.sin(phi))))
                         legendre_data[n] = {}
                         legendre_data[n][m] = legendre_m
 
                     if n in legendre_data and m + 2 in legendre_data[n]:
                         legendre_m_2_plus = retrieve_legendre_data(n, m + 2)
                     else:
-                        legendre_m_2_plus = [Decimal(float(P_nm(n, m + 2, np.sin(p)))) for p in phi_flat]
+                        legendre_m_2_plus = Decimal(float(P_nm(n, m + 2, np.sin(phi))))
                         legendre_data[n] = {}
                         legendre_data[n][m + 2] = legendre_m_2_plus
-
-                    # Convert back to NumPy arrays
-                    legendre_m_2 = np.array(legendre_m_2).reshape(phi.shape)
-                    legendre_m = np.array(legendre_m).reshape(phi.shape)
-                    legendre_m_2_plus = np.array(legendre_m_2_plus).reshape(phi.shape)
 
                     # Compute the power term
                     power_term = Decimal(pow(ratio, n + 3))
 
                     # Calculate the term involving trigonometric functions
-                    cos_term = [Decimal(np.cos(float(m * l))) for l in landa_flat]
-                    sin_term = [Decimal(np.sin(float(m * l))) for l in landa_flat]
-
-                    cos_term = np.array(cos_term).reshape(landa.shape)
-                    sin_term = np.array(sin_term).reshape(landa.shape)
+                    cos_term = Decimal(np.cos(float(m * landa)))
+                    sin_term = Decimal(np.sin(float(m * landa)))
 
                     # Accumulate part_two
-                    term = power_term * (
-                            (C * cos_term) + (S * sin_term)
-                    ) * (
-                                   (a * legendre_m_2) +
-                                   ((b - (n + 1) * (n + 2)) * legendre_m) +
-                                   (c * legendre_m_2_plus)
-                           )
+                    term = Decimal(power_term * ((C * cos_term) + (S * sin_term)) * (
+                                (a * legendre_m_2) + ((b - (n + 1) * (n + 2)) * legendre_m) + (c * legendre_m_2_plus)))
 
                     # Safeguard against invalid Decimal operations
                     part_two += term
