@@ -12,6 +12,12 @@ Gm = Decimal(constants.Gm())
 A = Decimal(constants.A())
 Nmax = constants.Nmax()
 
+legendre_data = {}
+
+
+def retrieve_legendre_data(n, m):
+    return legendre_data[n][m]
+
 
 def C_nm(n, m):
     return EGM96_data_dictionary[n][m][0]
@@ -117,6 +123,8 @@ def Txx_function(r, phi, landa):
         # Initialize part_two as a list of Decimals
         part_two = np.zeros_like(phi, dtype=object)
 
+        ratio = Decimal(A) / Decimal(r)
+
         # Iterate over n and m
         for n in range(2, Nmax + 1):
             for m in range(0, n + 1):
@@ -139,9 +147,26 @@ def Txx_function(r, phi, landa):
                     landa_flat = np.ravel(landa)
 
                     # Calculate the Legendre functions element-wise
-                    legendre_m_2 = [Decimal(float(P_nm(n, m - 2, np.sin(p)))) for p in phi_flat]
-                    legendre_m = [Decimal(float(P_nm(n, m, np.sin(p)))) for p in phi_flat]
-                    legendre_m_2_plus = [Decimal(float(P_nm(n, m + 2, np.sin(p)))) for p in phi_flat]
+                    if n in legendre_data and m - 2 in legendre_data[n]:
+                        legendre_m_2 = retrieve_legendre_data(n, m - 2)
+                    else:
+                        legendre_m_2 = [Decimal(float(P_nm(n, m - 2, np.sin(p)))) for p in phi_flat]
+                        legendre_data[n] = {}
+                        legendre_data[n][m - 2] = legendre_m_2
+
+                    if n in legendre_data and m in legendre_data[n]:
+                        legendre_m = retrieve_legendre_data(n, m)
+                    else:
+                        legendre_m = [Decimal(float(P_nm(n, m, np.sin(p)))) for p in phi_flat]
+                        legendre_data[n] = {}
+                        legendre_data[n][m] = legendre_m
+
+                    if n in legendre_data and m + 2 in legendre_data[n]:
+                        legendre_m_2_plus = retrieve_legendre_data(n, m + 2)
+                    else:
+                        legendre_m_2_plus = [Decimal(float(P_nm(n, m + 2, np.sin(p)))) for p in phi_flat]
+                        legendre_data[n] = {}
+                        legendre_data[n][m + 2] = legendre_m_2_plus
 
                     # Convert back to NumPy arrays
                     legendre_m_2 = np.array(legendre_m_2).reshape(phi.shape)
@@ -149,7 +174,6 @@ def Txx_function(r, phi, landa):
                     legendre_m_2_plus = np.array(legendre_m_2_plus).reshape(phi.shape)
 
                     # Compute the power term
-                    ratio = Decimal(A) / Decimal(r)
                     power_term = Decimal(pow(ratio, n + 3))
 
                     # Calculate the term involving trigonometric functions
