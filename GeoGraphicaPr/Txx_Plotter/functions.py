@@ -11,6 +11,9 @@ Gm = Decimal(constants.Gm())
 A = Decimal(constants.A())
 Nmax = constants.Nmax()
 
+# Set the precision for Decimal operations
+getcontext().prec = 50
+
 legendre_data = {}
 
 
@@ -90,7 +93,7 @@ def P_nm(n, m, t):
     r_max = (n - m) // 2
 
     # Initialize the sum
-    sum_result = 0
+    sum_result = Decimal(0)
 
     # Compute the sum
     for k in range(r_max + 1):
@@ -98,26 +101,27 @@ def P_nm(n, m, t):
         if (n - m - 2 * k) < 0:
             continue  # Skip this term since factorial of a negative number is not defined
 
-        # Compute the numerator and denominator using mpmath functions
-        numerator = pow(-1, k) * math.factorial(2 * n - 2 * k)
-        denominator = math.factorial(k) * math.factorial(n - k) * math.factorial(n - m - 2 * k)
+        # Compute the numerator and denominator using Decimal for arbitrary precision
+        numerator = Decimal((-1) ** k) * Decimal(math.factorial(2 * n - 2 * k))
+        denominator = (Decimal(math.factorial(k)) *
+                       Decimal(math.factorial(n - k)) *
+                       Decimal(math.factorial(n - m - 2 * k)))
 
-        # Add the term to the sum
-        sum_result += (numerator / denominator) * pow(t, n - m - 2 * k)
+        # Add the term to the sum with arbitrary precision
+        sum_result += (numerator / denominator) * pow(Decimal(t), Decimal(n - m - 2 * k))
 
-    # Compute the prefactor using mpmath
-    prefactor = pow(2, -n) * pow(1 - t ** 2, m / 2)
+    # Compute the prefactor using Decimal for arbitrary precision
+    prefactor = Decimal(2) ** (-n) * Decimal((1 - t ** 2) ** (m / 2))
 
     # Final result
-    return prefactor * sum_result
+    final_result = prefactor * sum_result
+    return final_result
 
 
 def Txx_function(r, phi, landa):
     try:
-        # Set the precision for Decimal operations
-        getcontext().prec = 1000
 
-        part_one = Decimal(1 / EOTVOS * (Gm / A ** -3))
+        part_one = Decimal(1) / Decimal(EOTVOS) * (Decimal(Gm) / Decimal(A) ** Decimal(-3))
 
         part_two = Decimal(0)
 
@@ -127,11 +131,12 @@ def Txx_function(r, phi, landa):
         for n in range(2, Nmax + 1):
             for m in range(0, n + 1):
                 try:
+                    print(f"in iteration : n={n} and m={m}")
                     # Fetch coefficients
                     C = Decimal(C_nm(n, m))
                     S = Decimal(S_nm(n, m))
 
-                    # Calculate the coefficients a, b, c using mpmath and convert to Decimal
+                    # Calculate the coefficients a, b, c and convert to Decimal
                     a = Decimal(float(a_nm(n, m)))
                     b = Decimal(float(b_nm(n, m)))
                     c = Decimal(float(c_nm(n, m)))
@@ -140,22 +145,25 @@ def Txx_function(r, phi, landa):
                     if n in legendre_data and m - 2 in legendre_data[n]:
                         legendre_m_2 = retrieve_legendre_data(n, m - 2)
                     else:
-                        legendre_m_2 = Decimal(float(P_nm(n, m - 2, np.sin(phi))))
-                        legendre_data[n] = {}
+                        legendre_m_2 = P_nm(n, m - 2, np.sin(phi))
+                        if n not in legendre_data:
+                            legendre_data[n] = {}
                         legendre_data[n][m - 2] = legendre_m_2
 
                     if n in legendre_data and m in legendre_data[n]:
                         legendre_m = retrieve_legendre_data(n, m)
                     else:
-                        legendre_m = Decimal(float(P_nm(n, m, np.sin(phi))))
-                        legendre_data[n] = {}
+                        legendre_m = P_nm(n, m, np.sin(phi))
+                        if n not in legendre_data:
+                            legendre_data[n] = {}
                         legendre_data[n][m] = legendre_m
 
                     if n in legendre_data and m + 2 in legendre_data[n]:
                         legendre_m_2_plus = retrieve_legendre_data(n, m + 2)
                     else:
-                        legendre_m_2_plus = Decimal(float(P_nm(n, m + 2, np.sin(phi))))
-                        legendre_data[n] = {}
+                        legendre_m_2_plus = P_nm(n, m + 2, np.sin(phi))
+                        if n not in legendre_data:
+                            legendre_data[n] = {}
                         legendre_data[n][m + 2] = legendre_m_2_plus
 
                     # Compute the power term
@@ -166,8 +174,9 @@ def Txx_function(r, phi, landa):
                     sin_term = Decimal(np.sin(float(m * landa)))
 
                     # Accumulate part_two
-                    term = Decimal(power_term * ((C * cos_term) + (S * sin_term)) * (
-                                (a * legendre_m_2) + ((b - (n + 1) * (n + 2)) * legendre_m) + (c * legendre_m_2_plus)))
+                    term = power_term * (Decimal((C * cos_term)) + Decimal((S * sin_term))) * (
+                            Decimal(a * legendre_m_2) + (Decimal((b - (n + 1) * (n + 2))) * legendre_m) + (
+                            c * legendre_m_2_plus))
 
                     # Safeguard against invalid Decimal operations
                     part_two += term
