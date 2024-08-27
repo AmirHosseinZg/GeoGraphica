@@ -1,9 +1,10 @@
 import tkinter as tk
 import matplotlib.pyplot as plt
 import numpy as np
+import functions
 from GeoGraphicaPr.Txx_Plotter.tools import Excel_converter
 from tkinter import ttk
-from decimal import getcontext
+from decimal import Decimal, getcontext
 
 
 def on_closing():
@@ -40,29 +41,44 @@ def plot_graph():
         # Set the precision for Decimal operations
         getcontext().prec = 50
 
-        # # Initialize the matrix to store Txx values
+        # Initialize the matrix to store Txx values
         # Txx_values = np.zeros((len(landa_range), len(phi_range)), dtype=object)
-        #
-        # # Calculate Txx values
+
+        # Calculate Txx values
         # for i, landa in enumerate(landa_range):
         #     for j, phi in enumerate(phi_range):
         #         Txx_values[i, j] = Decimal(functions.Txx_function(r, phi, landa))
 
         # restore the calculated data into excel file
-        Txx_values = Excel_converter.data_retriever("D:\\programming\\Projects\\GeoGraphica\\Sources\\Txx_values_example.xlsx")
+        Txx_values = Excel_converter.data_retriever(
+            "H:\\Zakeri\\Samadi_pr\\GeoGraphica\\Sources\\Txx_calculated_data_example.xlsx")
+        max_abs_value = []
+        for i in Txx_values:
+            max_abs_value.append(max(list(map(abs, i))))
+        maximum = max(max_abs_value)
+
+        # Initialize the matrix to store normalized Txx values
+        Txx_values_normalized = []
+
+        for row in Txx_values:
+            normalized_row = [float(val / maximum) for val in row]
+            Txx_values_normalized.append(normalized_row)
 
         # Plot the filled contour
         fig, ax = plt.subplots()
 
         # Create a filled contour plot
-        contour_filled = ax.contourf(Landa, Phi, Txx_values, levels=int(contours.get()), cmap=selected_colormap.get())
+        contour_filled = ax.contourf(Landa, Phi, Txx_values_normalized, levels=int(contours.get()),
+                                     cmap=selected_colormap.get())
 
         # Add contour lines on top
-        contour_lines = ax.contour(Landa, Phi, Txx_values, levels=int(contours.get()), colors='black', linewidths=0.5)
+        contour_lines = ax.contour(Landa, Phi, Txx_values_normalized, levels=int(contours.get()), colors='black',
+                                   linewidths=0.5)
 
         # Add a colorbar to show the mapping of values to colors
         colorbar = fig.colorbar(contour_filled, ax=ax, label='Function Value')
         colorbar.set_ticks([float(Colorbar_lower_bound.get()), float(Colorbar_upper_bound.get())])
+
         ax.set_xlabel("Longitude (degrees)")
         ax.set_ylabel("Latitude (degrees)")
         ax.set_title("Txx Function Plot")
