@@ -1,10 +1,9 @@
 import tkinter as tk
 import matplotlib.pyplot as plt
 import numpy as np
-import functions
-import math
-from tkinter import filedialog, messagebox
+from GeoGraphicaPr.Txx_Plotter.tools import Excel_converter
 from tkinter import ttk
+from decimal import getcontext
 
 
 def on_closing():
@@ -14,7 +13,7 @@ def on_closing():
 
 def plot_graph():
     try:
-        # Define the range for x and y
+        # Define the range for landa and phi  , landa = longitude & phi = latitude
         longitude_lowerbound_int = int(longitude_lowerbound.get())
         longitude_upperbound_int = int(longitude_upperbound.get())
         latitude_lowerbound_int = int(latitude_lowerbound.get())
@@ -22,49 +21,53 @@ def plot_graph():
 
         resolution_float = float(resolution.get())
 
-        longitude_range = float(longitude_upperbound_int - longitude_lowerbound_int)
-        latitude_range = float(latitude_upperbound_int - latitude_lowerbound_int)
+        # Define the range and resolution in degrees
+        landa_range_deg = np.arange(longitude_lowerbound_int, longitude_upperbound_int + resolution_float,
+                                    resolution_float)  # example : 50 to 52 with step 0.5
+        phi_range_deg = np.arange(latitude_lowerbound_int, latitude_upperbound_int + resolution_float,
+                                  resolution_float)  # example : 32 to 34 with step 0.5
 
-        phi = np.linspace(longitude_lowerbound_int, longitude_upperbound_int, int(longitude_range / resolution_float))
-        landa = np.linspace(latitude_lowerbound_int, latitude_upperbound_int, int(latitude_range / resolution_float))
-        phi, landa = np.meshgrid(phi, landa)
+        # Convert degrees to radians
+        landa_range = np.radians(landa_range_deg)
+        phi_range = np.radians(phi_range_deg)
+
+        # Create a meshgrid for plotting
+        Phi, Landa = np.meshgrid(phi_range_deg, landa_range_deg)
 
         # Calculate the function
         r = float(radius.get())
 
-        Z = functions.Txx_function(r=r, phi=phi * (math.pi / 180), landa=landa * (math.pi / 180))
+        # Set the precision for Decimal operations
+        getcontext().prec = 50
+
+        # # Initialize the matrix to store Txx values
+        # Txx_values = np.zeros((len(landa_range), len(phi_range)), dtype=object)
+        #
+        # # Calculate Txx values
+        # for i, landa in enumerate(landa_range):
+        #     for j, phi in enumerate(phi_range):
+        #         Txx_values[i, j] = Decimal(functions.Txx_function(r, phi, landa))
+
+        # restore the calculated data into excel file
+        Txx_values = Excel_converter.data_retriever("D:\\programming\\Projects\\GeoGraphica\\Sources\\Txx_values_example.xlsx")
 
         # Plot the filled contour
-        global fig
         fig, ax = plt.subplots()
 
         # Create a filled contour plot
-        contour_filled = ax.contourf(phi, landa, Z, levels=int(contours.get()), cmap=selected_colormap.get())
+        contour_filled = ax.contourf(Landa, Phi, Txx_values, levels=int(contours.get()), cmap=selected_colormap.get())
 
         # Add contour lines on top
-        contour_lines = ax.contour(phi, landa, Z, levels=int(contours.get()), colors='black', linewidths=0.5)
+        contour_lines = ax.contour(Landa, Phi, Txx_values, levels=int(contours.get()), colors='black', linewidths=0.5)
 
         # Add a colorbar to show the mapping of values to colors
         colorbar = fig.colorbar(contour_filled, ax=ax, label='Function Value')
         colorbar.set_ticks([float(Colorbar_lower_bound.get()), float(Colorbar_upper_bound.get())])
-        ax.set_xlabel('X')
-        ax.set_ylabel('Y')
-        ax.set_title("Txx")
+        ax.set_xlabel("Longitude (degrees)")
+        ax.set_ylabel("Latitude (degrees)")
+        ax.set_title("Txx Function Plot")
         ax.grid(True)
-
-        # Notify the user that the plot has been generated and will be saved
-        messagebox.showinfo("Plot Generated", "The plot has been generated. Selecting a location to save it now.")
-
-        # Open the save file dialog and automatically save the plot
-        file_path = filedialog.asksaveasfilename(
-            defaultextension=".png",
-            filetypes=[("PNG files", "*.png"), ("JPEG files", "*.jpg"), ("All files", "*.*")],
-            title="Save the plot"
-        )
-        if file_path:
-            # Save the figure
-            fig.savefig(file_path)
-            messagebox.showinfo("Saved", f"Plot saved successfully as {file_path}")
+        plt.show()
 
     except ValueError:
         error_label.config(text="Please enter valid numeric values.")
@@ -144,8 +147,6 @@ frame.grid_columnconfigure(0, weight=1)
 frame.grid_columnconfigure(1, weight=1)
 frame.grid_columnconfigure(2, weight=1)
 frame.grid_columnconfigure(3, weight=1)
-
-fig = None  # Global variable to hold the figure object
 
 window.protocol("WM_DELETE_WINDOW", on_closing)
 
