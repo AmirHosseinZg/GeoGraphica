@@ -131,7 +131,7 @@ def Txx_function(r, phi, landa):
         for n in range(2, Nmax + 1):
             for m in range(0, n + 1):
                 try:
-                    print(f"in iteration : n={n} and m={m}")
+                    # print(f"in iteration : n={n} and m={m}")
                     # Fetch coefficients
                     C = Decimal(C_nm(n, m))
                     S = Decimal(S_nm(n, m))

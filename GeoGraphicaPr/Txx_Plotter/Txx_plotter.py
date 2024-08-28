@@ -47,21 +47,22 @@ def plot_graph():
         # Calculate Txx values
         # for i, landa in enumerate(landa_range):
         #     for j, phi in enumerate(phi_range):
-        #         Txx_values[i, j] = Decimal(functions.Txx_function(r, phi, landa))
-
-        # restore the calculated data into excel file
+        #         result = Decimal(functions.Txx_function(r, phi, landa))
+        #         print(f"landa = {landa},phi = {phi},Txx(landa,phi) = {result}")
+        #         Txx_values[i, j] = result
+        # # restore the calculated data into excel file
         Txx_values = Excel_converter.data_retriever(
             "H:\\Zakeri\\Samadi_pr\\GeoGraphica\\Sources\\Txx_calculated_data_example.xlsx")
-        max_abs_value = []
-        for i in Txx_values:
-            max_abs_value.append(max(list(map(abs, i))))
-        maximum = max(max_abs_value)
-
-        # Initialize the matrix to store normalized Txx values
+        # max_abs_value = []
+        # for i in Txx_values:
+        #     max_abs_value.append(max(list(map(abs, i))))
+        # maximum = max(max_abs_value)
+        #
+        # # Initialize the matrix to store normalized Txx values
         Txx_values_normalized = []
-
+        #
         for row in Txx_values:
-            normalized_row = [float(val / maximum) for val in row]
+            normalized_row = [float(val / pow(10, 1)) for val in row]
             Txx_values_normalized.append(normalized_row)
 
         # Plot the filled contour
