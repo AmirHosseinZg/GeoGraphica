@@ -4,6 +4,7 @@ class Constants:
         self.__GM = 3.986004418 * pow(10, 14)
         self.__A = 6378137.0
         self.__Nmax = 360
+        self.__PRECISION = 20
 
     @property
     def EOTVOS(self):
@@ -17,3 +18,6 @@ class Constants:
 
     def Nmax(self):
         return self.__Nmax
+
+    def PRECISION(self):
+        return self.__PRECISION
