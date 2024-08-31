@@ -10,9 +10,10 @@ EOTVOS = Decimal(constants.EOTVOS)
 Gm = Decimal(constants.Gm())
 A = Decimal(constants.A())
 Nmax = constants.Nmax()
+PRECISION = constants.PRECISION()
 
 # Set the precision for Decimal operations
-getcontext().prec = 50
+getcontext().prec = PRECISION
 
 legendre_data = {}
 
@@ -52,9 +53,9 @@ def a_nm(n, m):
 
 def b_nm(n, m):
     if abs(m) == 0 or abs(m) == 1:
-        result = (((n + abs(m) + 1) * (n + abs(m) + 2)) / 2 * (abs(m) + 1))
+        result = ((n + abs(m) + 1) * (n + abs(m) + 2)) / (2 * (abs(m) + 1))
     elif 2 <= abs(m) <= n:
-        sqrt_term = pow(n, 2) + pow(m, 2) + 3 * n + 2
+        sqrt_term = pow(n, 2) + pow(m, 2) + (3 * n) + 2
         if sqrt_term < 0:
             raise ValueError(f"Invalid sqrt input at n={n}, m={m} in b_nm function")
         result = sqrt_term / 2
@@ -72,14 +73,10 @@ def c_nm(n, m):
     if sqrt_term_1 < 0 or sqrt_term_2 < 0:
         raise ValueError(f"Invalid sqrt input at n={n}, m={m} in c_nm function")
 
-    if abs(m) == 0 or abs(m) == 1:
-        if abs(m) == 0:
-            result = ((math.sqrt(2) / 4) * (math.sqrt(sqrt_term_1)) *
-                      (math.sqrt(n - abs(m))) * (math.sqrt(sqrt_term_2)))
-        else:
-            result = ((1 / 4) * (math.sqrt(sqrt_term_1)) *
-                      (math.sqrt(n - abs(m))) * (math.sqrt(sqrt_term_2)))
-    elif 2 <= abs(m) <= n:
+    if abs(m) == 0:
+        result = ((math.sqrt(2) / 4) * (math.sqrt(sqrt_term_1)) *
+                  (math.sqrt(n - abs(m))) * (math.sqrt(sqrt_term_2)))
+    elif abs(m) == 1 or 2 <= abs(m) <= n:
         result = ((1 / 4) * (math.sqrt(sqrt_term_1)) *
                   (math.sqrt(n - abs(m))) * (math.sqrt(sqrt_term_2)))
     else:
@@ -102,7 +99,7 @@ def P_nm(n, m, t):
             continue  # Skip this term since factorial of a negative number is not defined
 
         # Compute the numerator and denominator using Decimal for arbitrary precision
-        numerator = Decimal((-1) ** k) * Decimal(math.factorial(2 * n - 2 * k))
+        numerator = Decimal((-1) ** k) * Decimal(math.factorial((2 * n) - (2 * k)))
         denominator = (Decimal(math.factorial(k)) *
                        Decimal(math.factorial(n - k)) *
                        Decimal(math.factorial(n - m - 2 * k)))
@@ -111,7 +108,7 @@ def P_nm(n, m, t):
         sum_result += (numerator / denominator) * pow(Decimal(t), Decimal(n - m - 2 * k))
 
     # Compute the prefactor using Decimal for arbitrary precision
-    prefactor = Decimal(2) ** (-n) * Decimal((1 - t ** 2) ** (m / 2))
+    prefactor = (Decimal(2) ** (-n)) * (Decimal((1 - t ** 2) ** (m / 2)))
 
     # Final result
     final_result = prefactor * sum_result
@@ -121,7 +118,7 @@ def P_nm(n, m, t):
 def Txx_function(r, phi, landa):
     try:
 
-        part_one = Decimal(1) / Decimal(EOTVOS) * (Decimal(Gm) / Decimal(A) ** Decimal(-3))
+        part_one = (Decimal(1) / Decimal(EOTVOS)) * ((Decimal(Gm) / (Decimal(A) ** Decimal(3))))
 
         part_two = Decimal(0)
 
@@ -131,7 +128,6 @@ def Txx_function(r, phi, landa):
         for n in range(2, Nmax + 1):
             for m in range(0, n + 1):
                 try:
-                    # print(f"in iteration : n={n} and m={m}")
                     # Fetch coefficients
                     C = Decimal(C_nm(n, m))
                     S = Decimal(S_nm(n, m))
@@ -178,7 +174,6 @@ def Txx_function(r, phi, landa):
                             Decimal(a * legendre_m_2) + (Decimal((b - (n + 1) * (n + 2))) * legendre_m) + (
                             c * legendre_m_2_plus))
 
-                    # Safeguard against invalid Decimal operations
                     part_two += term
 
                 except InvalidOperation as ioe:
