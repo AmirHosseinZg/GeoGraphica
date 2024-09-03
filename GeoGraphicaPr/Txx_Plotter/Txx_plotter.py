@@ -2,10 +2,7 @@ import tkinter as tk
 import matplotlib.pyplot as plt
 import numpy as np
 import functions
-import Constant
-from GeoGraphicaPr.Txx_Plotter.tools import Excel_converter
 from tkinter import ttk
-from decimal import Decimal, getcontext
 
 
 def on_closing():
@@ -39,33 +36,15 @@ def plot_graph():
         # Calculate the function
         r = float(radius.get())
 
-        # Set the precision for Decimal operations
-        constant = Constant.Constants()
-        getcontext().prec = constant.PRECISION()
-
         # Initialize the matrix to store Txx values
-        Txx_values = np.zeros((len(landa_range), len(phi_range)), dtype=object)
+        Txx_values = np.zeros((len(landa_range), len(phi_range)))
 
         # Calculate Txx values
         for i, landa in enumerate(landa_range):
             for j, phi in enumerate(phi_range):
-                result = Decimal(functions.Txx_function(r, phi, landa))
+                result = functions.Txx_function(r, phi, landa)
                 print(f"landa = {landa},phi = {phi},Txx(landa,phi) = {result}")
                 Txx_values[i, j] = result
-        # # restore the calculated data into excel file
-        # Txx_values = Excel_converter.data_retriever(
-        #     "D:\\programming\\Projects\\GeoGraphica\\Sources\\Txx_calculated_data_example.xlsx")
-        # max_abs_value = []
-        # for i in Txx_values:
-        #     max_abs_value.append(max(list(map(abs, i))))
-        # maximum = max(max_abs_value)
-        #
-        # # Initialize the matrix to store normalized Txx values
-        # Txx_values_normalized = []
-        #
-        # for row in Txx_values:
-        #     normalized_row = [np.longdouble(val) for val in row]
-        #     Txx_values_normalized.append(normalized_row)
 
         # Plot the filled contour
         fig, ax = plt.subplots()
