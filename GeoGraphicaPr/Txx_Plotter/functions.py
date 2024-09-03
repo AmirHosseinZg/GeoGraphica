@@ -1,19 +1,19 @@
-import math
-import numpy as np
+from mpmath import mp, mpf, sqrt, factorial
+from scipy.special import lpmv
 from GeoGraphicaPr.Txx_Plotter import EGM96_data, Constant
-from decimal import Decimal, getcontext, InvalidOperation
+import numpy as np
 
 EGM96_data_dictionary = EGM96_data.data
 
 constants = Constant.Constants()
-EOTVOS = Decimal(constants.EOTVOS)
-Gm = Decimal(constants.Gm())
-A = Decimal(constants.A())
+EOTVOS = mpf(constants.EOTVOS)
+Gm = mpf(constants.Gm())
+A = mpf(constants.A())
 Nmax = constants.Nmax()
 PRECISION = constants.PRECISION()
 
-# Set the precision for Decimal operations
-getcontext().prec = PRECISION
+# Set the precision for mpmath operations
+mp.dps = PRECISION
 
 legendre_data = {}
 
@@ -40,11 +40,11 @@ def a_nm(n, m):
             raise ValueError(f"Invalid sqrt input at n={n}, m={m} in a_nm function")
 
         if abs(m) == 2:
-            result = ((math.sqrt(2) / 4) * (math.sqrt(sqrt_term_1)) *
-                      (math.sqrt(n + abs(m))) * (math.sqrt(sqrt_term_2)))
+            result = ((sqrt(2) / 4) * (sqrt(sqrt_term_1)) *
+                      (sqrt(n + abs(m))) * (sqrt(sqrt_term_2)))
         else:
-            result = ((1 / 4) * (math.sqrt(sqrt_term_1)) *
-                      (math.sqrt(n + abs(m))) * (math.sqrt(sqrt_term_2)))
+            result = ((1 / 4) * (sqrt(sqrt_term_1)) *
+                      (sqrt(n + abs(m))) * (sqrt(sqrt_term_2)))
     else:
         raise ValueError(f"Invalid argument for a_nm() with n={n}, m={m}")
 
@@ -74,74 +74,63 @@ def c_nm(n, m):
         raise ValueError(f"Invalid sqrt input at n={n}, m={m} in c_nm function")
 
     if abs(m) == 0:
-        result = ((math.sqrt(2) / 4) * (math.sqrt(sqrt_term_1)) *
-                  (math.sqrt(n - abs(m))) * (math.sqrt(sqrt_term_2)))
+        result = ((sqrt(2) / 4) * (sqrt(sqrt_term_1)) *
+                  (sqrt(n - abs(m))) * (sqrt(sqrt_term_2)))
     elif abs(m) == 1 or 2 <= abs(m) <= n:
-        result = ((1 / 4) * (math.sqrt(sqrt_term_1)) *
-                  (math.sqrt(n - abs(m))) * (math.sqrt(sqrt_term_2)))
+        result = ((1 / 4) * (sqrt(sqrt_term_1)) *
+                  (sqrt(n - abs(m))) * (sqrt(sqrt_term_2)))
     else:
         raise ValueError(f"Invalid argument for c_nm() with n={n}, m={m}")
 
     return result
 
 
-def P_nm(n, m, t):
-    # Determine the largest integer r such that r <= (n - m) / 2
-    r_max = (n - m) // 2
+def normal_pnm(n, m, t):
+    # Convert n and m to mpf for high precision
+    n, m = mpf(n), mpf(m)
 
-    # Initialize the sum
-    sum_result = Decimal(0)
+    # Step 1: Calculate the Kronecker delta δ_{m,0}
+    delta_m0 = mpf(1 if m == 0 else 0)
 
-    # Compute the sum
-    for k in range(r_max + 1):
-        # Check if the factorial arguments are non-negative
-        if (n - m - 2 * k) < 0:
-            continue  # Skip this term since factorial of a negative number is not defined
+    # Step 2: Compute the normalization factor using mpmath
+    normalization_factor = sqrt((2 * n + 1) * (2 - delta_m0) * (factorial(n - abs(m)) / factorial(n + abs(m))))
 
-        # Compute the numerator and denominator using Decimal for arbitrary precision
-        numerator = Decimal((-1) ** k) * Decimal(math.factorial((2 * n) - (2 * k)))
-        denominator = (Decimal(math.factorial(k)) *
-                       Decimal(math.factorial(n - k)) *
-                       Decimal(math.factorial(n - m - 2 * k)))
+    # Step 3: Calculate the associated Legendre polynomial P_n^m(x)
+    legendre_value = mpf(lpmv(int(abs(m)), int(n), float(t)))
 
-        # Add the term to the sum with arbitrary precision
-        sum_result += (numerator / denominator) * pow(Decimal(t), Decimal(n - m - 2 * k))
+    # Step 4: Apply the final formula including the (-1)^m term
+    result = normalization_factor * ((-1) ** int(m)) * legendre_value
 
-    # Compute the prefactor using Decimal for arbitrary precision
-    prefactor = (Decimal(2) ** (-n)) * (Decimal((1 - t ** 2) ** (m / 2)))
-
-    # Final result
-    final_result = prefactor * sum_result
-    return final_result
+    return result
 
 
 def Txx_function(r, phi, landa):
     try:
 
-        part_one = (Decimal(1) / Decimal(EOTVOS)) * ((Decimal(Gm) / (Decimal(A) ** Decimal(3))))
+        part_one = (mpf(1) / mpf(EOTVOS)) * ((mpf(Gm) / (mpf(A) ** mpf(3))))
 
-        part_two = Decimal(0)
+        part_two = mpf(0)
 
-        ratio = Decimal(A) / Decimal(r)
+        ratio = mpf(A) / mpf(r)
 
         # Iterate over n and m
         for n in range(2, Nmax + 1):
             for m in range(0, n + 1):
                 try:
                     # Fetch coefficients
-                    C = Decimal(C_nm(n, m))
-                    S = Decimal(S_nm(n, m))
+                    C = mpf(C_nm(n, m))
+                    S = mpf(S_nm(n, m))
 
                     # Calculate the coefficients a, b, c and convert to Decimal
-                    a = Decimal(float(a_nm(n, m)))
-                    b = Decimal(float(b_nm(n, m)))
-                    c = Decimal(float(c_nm(n, m)))
+                    a = mpf(float(a_nm(n, m)))
+                    b = mpf(float(b_nm(n, m)))
+                    c = mpf(float(c_nm(n, m)))
 
                     # Calculate the Legendre functions element
                     if n in legendre_data and m - 2 in legendre_data[n]:
                         legendre_m_2 = retrieve_legendre_data(n, m - 2)
                     else:
-                        legendre_m_2 = P_nm(n, m - 2, np.sin(phi))
+                        legendre_m_2 = normal_pnm(n, m - 2, np.sin(phi))
                         if n not in legendre_data:
                             legendre_data[n] = {}
                         legendre_data[n][m - 2] = legendre_m_2
@@ -149,7 +138,7 @@ def Txx_function(r, phi, landa):
                     if n in legendre_data and m in legendre_data[n]:
                         legendre_m = retrieve_legendre_data(n, m)
                     else:
-                        legendre_m = P_nm(n, m, np.sin(phi))
+                        legendre_m = normal_pnm(n, m, np.sin(phi))
                         if n not in legendre_data:
                             legendre_data[n] = {}
                         legendre_data[n][m] = legendre_m
@@ -157,27 +146,25 @@ def Txx_function(r, phi, landa):
                     if n in legendre_data and m + 2 in legendre_data[n]:
                         legendre_m_2_plus = retrieve_legendre_data(n, m + 2)
                     else:
-                        legendre_m_2_plus = P_nm(n, m + 2, np.sin(phi))
+                        legendre_m_2_plus = normal_pnm(n, m + 2, np.sin(phi))
                         if n not in legendre_data:
                             legendre_data[n] = {}
                         legendre_data[n][m + 2] = legendre_m_2_plus
 
                     # Compute the power term
-                    power_term = Decimal(pow(ratio, n + 3))
+                    power_term = mpf(pow(ratio, n + 3))
 
                     # Calculate the term involving trigonometric functions
-                    cos_term = Decimal(np.cos(float(m * landa)))
-                    sin_term = Decimal(np.sin(float(m * landa)))
+                    cos_term = mpf(np.cos(float(m * landa)))
+                    sin_term = mpf(np.sin(float(m * landa)))
 
                     # Accumulate part_two
-                    term = power_term * (Decimal((C * cos_term)) + Decimal((S * sin_term))) * (
-                            Decimal(a * legendre_m_2) + (Decimal((b - (n + 1) * (n + 2))) * legendre_m) + (
+                    term = power_term * (mpf((C * cos_term)) + mpf((S * sin_term))) * (
+                            mpf(a * legendre_m_2) + (mpf((b - (n + 1) * (n + 2))) * legendre_m) + (
                             c * legendre_m_2_plus))
 
                     part_two += term
 
-                except InvalidOperation as ioe:
-                    print(f"InvalidOperation: n={n}, m={m} - {ioe}")
                 except KeyError as ke:
                     print(f"KeyError: n={n}, m={m} - {ke}")
                 except ValueError as ve:
