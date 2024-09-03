@@ -1,0 +1,280 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     10238,        272]
+NotebookOptionsPosition[      9039,        245]
+NotebookOutlinePosition[      9468,        262]
+CellTagsIndexPosition[      9425,        259]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"NormalPnm", "[", 
+     RowBox[{"n_Integer", ",", "m_Integer", ",", "x_"}], "]"}], ":=", 
+    RowBox[{"Piecewise", "[", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Sqrt", "[", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"2", " ", "n"}], "+", "1"}], ")"}], " ", 
+           RowBox[{"(", 
+            RowBox[{"2", "-", 
+             RowBox[{"KroneckerDelta", "[", 
+              RowBox[{"m", ",", "0"}], "]"}]}], ")"}], " ", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"n", "-", 
+               RowBox[{"Abs", "[", "m", "]"}]}], ")"}], "!"}], "/", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"n", "+", 
+               RowBox[{"Abs", "[", "m", "]"}]}], ")"}], "!"}]}]}], "]"}], " ", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"-", "1"}], ")"}], "^", "m"}], " ", 
+         RowBox[{"LegendreP", "[", 
+          RowBox[{"n", ",", 
+           RowBox[{"Abs", "[", "m", "]"}], ",", "x"}], "]"}]}], ",", 
+        RowBox[{"n", ">=", 
+         RowBox[{"Abs", "[", "m", "]"}]}]}], "}"}], "}"}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]"}], "\n", 
+ RowBox[{
+  RowBox[{"n", "=", "103"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"m", "=", "84"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"x", "=", 
+    RowBox[{"Sin", "[", "0.55850", "]"}]}], ";"}], "\[IndentingNewLine]", 
+  "\n"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"result", "=", 
+    RowBox[{"NormalPnm", "[", 
+     RowBox[{"n", ",", "m", ",", "x"}], "]"}]}], ";"}], "\[IndentingNewLine]",
+   "\n"}], "\[IndentingNewLine]", 
+ RowBox[{"Print", "[", 
+  RowBox[{
+  "\"\<The value of NormalPnm[\>\"", ",", "n", ",", "\"\<, \>\"", ",", "m", 
+   ",", "\"\<, Sin(0.55850)] is: \>\"", ",", "result"}], 
+  "]"}], "\n"}], "Input",
+ CellChangeTimes->{{3.9341579742195807`*^9, 3.9341579742205796`*^9}, {
+   3.934158078159354*^9, 3.9341580799915967`*^9}, {3.9341583404304485`*^9, 
+   3.934158349930314*^9}, {3.934159980406808*^9, 3.9341599808573236`*^9}, 
+   3.934160034664791*^9, 3.934161680500845*^9, {3.9341622781603255`*^9, 
+   3.934162285125082*^9}, {3.9341623385503874`*^9, 3.9341623387813916`*^9}, {
+   3.9341651705858097`*^9, 3.934165176343075*^9}, {3.9341655320079823`*^9, 
+   3.9341655355340986`*^9}, {3.9341788447274694`*^9, 3.9341788467302847`*^9}},
+ CellLabel->"In[49]:=",ExpressionUUID->"f5bf7082-0a6c-466d-8388-8b7b621c6ee0"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The value of NormalPnm[\"\>", "\[InvisibleSpace]", "103", 
+   "\[InvisibleSpace]", "\<\", \"\>", "\[InvisibleSpace]", "84", 
+   "\[InvisibleSpace]", "\<\", Sin(0.55850)] is: \"\>", "\[InvisibleSpace]", 
+   "2.772406922044603`"}],
+  SequenceForm[
+  "The value of NormalPnm[", 103, ", ", 84, ", Sin(0.55850)] is: ", 
+   2.772406922044603],
+  Editable->False]], "Print",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.9341600420264535`*^9, {3.934161671938846*^9, 3.934161683140498*^9}, 
+   3.9341622879369116`*^9, 3.9341623412349224`*^9, 3.9341651785463*^9, 
+   3.9341655373565283`*^9, 3.9341779330298367`*^9, 3.9341788560929594`*^9},
+ CellLabel->
+  "During evaluation of \
+In[49]:=",ExpressionUUID->"be3f28b5-a1c4-4a8d-92af-3207406f9ca9"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The value of NormalPnm[\"\>", "\[InvisibleSpace]", "102", 
+   "\[InvisibleSpace]", "\<\", \"\>", "\[InvisibleSpace]", "84", 
+   "\[InvisibleSpace]", "\<\", Sin(0.55850)] is: \"\>", "\[InvisibleSpace]", 
+   "3.3307485359913622`"}],
+  SequenceForm[
+  "The value of NormalPnm[", 102, ", ", 84, ", Sin(0.55850)] is: ", 
+   3.3307485359913622`],
+  Editable->False]], "Print",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.9341600420264535`*^9, {3.934161671938846*^9, 3.934161683140498*^9}, 
+   3.9341622879369116`*^9, 3.9341623412349224`*^9, 3.9341651785463*^9, 
+   3.9341655373565283`*^9, 3.9341779330298367`*^9},
+ CellLabel->
+  "During evaluation of \
+In[43]:=",ExpressionUUID->"2fbd36ae-12f6-4384-a32c-9aafd8a6d2e2"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The value of NormalPnm[\"\>", "\[InvisibleSpace]", "102", 
+   "\[InvisibleSpace]", "\<\", \"\>", "\[InvisibleSpace]", "84", 
+   "\[InvisibleSpace]", "\<\", Sin(0.55850)] is: \"\>", "\[InvisibleSpace]", 
+   "3.3307485359913622`"}],
+  SequenceForm[
+  "The value of NormalPnm[", 102, ", ", 84, ", Sin(0.55850)] is: ", 
+   3.3307485359913622`],
+  Editable->False]], "Print",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.9341600420264535`*^9, {3.934161671938846*^9, 3.934161683140498*^9}, 
+   3.9341622879369116`*^9, 3.9341623412349224`*^9, 3.9341651785463*^9, 
+   3.9341655373565283`*^9},
+ CellLabel->
+  "During evaluation of \
+In[37]:=",ExpressionUUID->"1805331d-9c5b-4153-99ee-8fac97799526"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The value of NormalPnm[\"\>", "\[InvisibleSpace]", "86", 
+   "\[InvisibleSpace]", "\<\", \"\>", "\[InvisibleSpace]", "85", 
+   "\[InvisibleSpace]", "\<\", Sin(0.55850)] is: \"\>", "\[InvisibleSpace]", 
+   "0.00002625096703039133`"}],
+  SequenceForm[
+  "The value of NormalPnm[", 86, ", ", 85, ", Sin(0.55850)] is: ", 
+   0.00002625096703039133],
+  Editable->False]], "Print",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.9341600420264535`*^9, {3.934161671938846*^9, 3.934161683140498*^9}, 
+   3.9341622879369116`*^9, 3.9341623412349224`*^9, 3.9341651785463*^9},
+ CellLabel->
+  "During evaluation of \
+In[31]:=",ExpressionUUID->"bfa93db0-c15b-4cb9-84f2-995bc0ffeb0e"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The value of NormalPnm[\"\>", "\[InvisibleSpace]", "278", 
+   "\[InvisibleSpace]", "\<\", \"\>", "\[InvisibleSpace]", "76", 
+   "\[InvisibleSpace]", "\<\", Sin(0.55850)] is: \"\>", "\[InvisibleSpace]", 
+   "0.5351533553532987`"}],
+  SequenceForm[
+  "The value of NormalPnm[", 278, ", ", 76, ", Sin(0.55850)] is: ", 
+   0.5351533553532987],
+  Editable->False]], "Print",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.9341600420264535`*^9, {3.934161671938846*^9, 3.934161683140498*^9}, 
+   3.9341622879369116`*^9, 3.9341623412349224`*^9},
+ CellLabel->
+  "During evaluation of \
+In[25]:=",ExpressionUUID->"bc72e79a-7418-488a-af83-04de1482cb56"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The value of NormalPnm[\"\>", "\[InvisibleSpace]", "278", 
+   "\[InvisibleSpace]", "\<\", \"\>", "\[InvisibleSpace]", "67", 
+   "\[InvisibleSpace]", "\<\", Sin(0.55850)] is: \"\>", "\[InvisibleSpace]", 
+   "0.6480805386249392`"}],
+  SequenceForm[
+  "The value of NormalPnm[", 278, ", ", 67, ", Sin(0.55850)] is: ", 
+   0.6480805386249392],
+  Editable->False]], "Print",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.9341600420264535`*^9, {3.934161671938846*^9, 3.934161683140498*^9}, 
+   3.9341622879369116`*^9},
+ CellLabel->
+  "During evaluation of \
+In[19]:=",ExpressionUUID->"21c8b587-d2cc-4e72-88b2-002636180ae9"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The value of NormalPnm[\"\>", "\[InvisibleSpace]", "360", 
+   "\[InvisibleSpace]", "\<\", \"\>", "\[InvisibleSpace]", "1", 
+   "\[InvisibleSpace]", "\<\", Sin(0.55850)] is: \"\>", "\[InvisibleSpace]", 
+   RowBox[{"-", "0.4733337692950177`"}]}],
+  SequenceForm[
+  "The value of NormalPnm[", 360, ", ", 1, 
+   ", Sin(0.55850)] is: ", -0.4733337692950177],
+  Editable->False]], "Print",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{
+  3.9341600420264535`*^9, {3.934161671938846*^9, 3.934161683140498*^9}},
+ CellLabel->
+  "During evaluation of \
+In[13]:=",ExpressionUUID->"65848067-671a-4da7-a53f-b23836f07d3b"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The value of NormalPnm[\"\>", "\[InvisibleSpace]", "360", 
+   "\[InvisibleSpace]", "\<\", \"\>", "\[InvisibleSpace]", 
+   RowBox[{"-", "1"}], "\[InvisibleSpace]", "\<\", Sin(0.55850)] is: \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"-", "0.4733337692950177`"}]}],
+  SequenceForm[
+  "The value of NormalPnm[", 360, ", ", -1, 
+   ", Sin(0.55850)] is: ", -0.4733337692950177],
+  Editable->False]], "Print",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{3.9341600420264535`*^9, 
+  3.934161671938846*^9},ExpressionUUID->"ad915eaf-e7b2-4188-8c31-\
+d997cefec1b2"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1600, 827},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+Magnification:>1.2 Inherited,
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (June 19, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"6e41a502-704f-4775-8fc7-5c4d0e20f1e4"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 2551, 65, 312, "Input",ExpressionUUID->"f5bf7082-0a6c-466d-8388-8b7b621c6ee0"],
+Cell[CellGroupData[{
+Cell[3156, 91, 812, 18, 28, "Print",ExpressionUUID->"be3f28b5-a1c4-4a8d-92af-3207406f9ca9"],
+Cell[3971, 111, 791, 18, 28, "Print",ExpressionUUID->"2fbd36ae-12f6-4384-a32c-9aafd8a6d2e2"],
+Cell[4765, 131, 767, 18, 28, "Print",ExpressionUUID->"1805331d-9c5b-4153-99ee-8fac97799526"],
+Cell[5535, 151, 744, 17, 28, "Print",ExpressionUUID->"bfa93db0-c15b-4cb9-84f2-995bc0ffeb0e"],
+Cell[6282, 170, 718, 17, 28, "Print",ExpressionUUID->"bc72e79a-7418-488a-af83-04de1482cb56"],
+Cell[7003, 189, 694, 17, 28, "Print",ExpressionUUID->"21c8b587-d2cc-4e72-88b2-002636180ae9"],
+Cell[7700, 208, 680, 16, 28, "Print",ExpressionUUID->"65848067-671a-4da7-a53f-b23836f07d3b"],
+Cell[8383, 226, 628, 15, 28, "Print",ExpressionUUID->"ad915eaf-e7b2-4188-8c31-d997cefec1b2"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
