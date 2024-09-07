@@ -1,5 +1,4 @@
 from mpmath import mp, mpf, sqrt, factorial
-from scipy.special import lpmv
 from GeoGraphicaPr.Txx_Plotter import EGM96_data, Constant
 import numpy as np
 
@@ -85,20 +84,48 @@ def c_nm(n, m):
     return result
 
 
+def legendre_recurrence(n, m, x):
+    # Initial values for P_m^m(x) when m = 0
+    pmm = mp.mpf(1.0)
+    if m > 0:
+        somx2 = sqrt((1 - x) * (1 + x))
+        fact = mp.mpf(1.0)
+        for i in range(1, m + 1):
+            pmm *= -fact * somx2
+            fact += 2
+
+    if n == m:
+        return pmm
+
+    # Initial value for P_{m+1}^m(x)
+    pmmp1 = x * (2 * m + 1) * pmm
+    if n == m + 1:
+        return pmmp1
+
+    # Use the recurrence relation to compute higher order values
+    for i in range(m + 2, n + 1):
+        pmm, pmmp1 = pmmp1, ((2 * i - 1) * x * pmmp1 - (i + m - 1) * pmm) / (i - m)
+
+    return pmmp1
+
+
 def normal_pnm(n, m, t):
     # Convert n and m to mpf for high precision
     n, m = mpf(n), mpf(m)
 
-    # Step 1: Calculate the Kronecker delta δ_{m,0}
+    if abs(m) > n:
+        return 0  # if m > n then (n-abs(m))! is not defined ( negative factorial not defined)
+
+    # Calculate the Kronecker delta δ_{m,0}
     delta_m0 = mpf(1 if m == 0 else 0)
 
-    # Step 2: Compute the normalization factor using mpmath
+    # Compute the normalization factor using mpmath
     normalization_factor = sqrt((2 * n + 1) * (2 - delta_m0) * (factorial(n - abs(m)) / factorial(n + abs(m))))
 
-    # Step 3: Calculate the associated Legendre polynomial P_n^m(x)
-    legendre_value = mpf(lpmv(int(abs(m)), int(n), float(t)))
+    # Calculate the associated Legendre polynomial P_n^m(x)
+    legendre_value = mpf(legendre_recurrence(int(n), int(abs(m)), t))
 
-    # Step 4: Apply the final formula including the (-1)^m term
+    # Apply the final formula including the (-1)^m term
     result = normalization_factor * ((-1) ** int(m)) * legendre_value
 
     return result
