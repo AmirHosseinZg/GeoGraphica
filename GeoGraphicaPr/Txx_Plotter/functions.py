@@ -17,6 +17,11 @@ mp.dps = PRECISION
 legendre_data = {}
 
 
+def legendre_data_existence(n, m):
+    existence_status = (n in legendre_data) and (m in legendre_data[n])
+    return existence_status
+
+
 def retrieve_legendre_data(n, m):
     return legendre_data[n][m]
 
@@ -133,6 +138,7 @@ def normal_pnm(n, m, t):
 
 def Txx_function(r, phi, landa):
     try:
+        global legendre_data
 
         part_one = (mpf(1) / mpf(EOTVOS)) * ((mpf(Gm) / (mpf(A) ** mpf(3))))
 
@@ -153,8 +159,9 @@ def Txx_function(r, phi, landa):
                     b = mpf(float(b_nm(n, m)))
                     c = mpf(float(c_nm(n, m)))
 
-                    # Calculate the Legendre functions element
-                    if n in legendre_data and m - 2 in legendre_data[n]:
+                    # Calculate the Legendre functions element (p_nm(n,m-2))
+                    existence_status = legendre_data_existence(n, m - 2)
+                    if existence_status:
                         legendre_m_2 = retrieve_legendre_data(n, m - 2)
                     else:
                         legendre_m_2 = normal_pnm(n, m - 2, np.sin(phi))
@@ -162,7 +169,9 @@ def Txx_function(r, phi, landa):
                             legendre_data[n] = {}
                         legendre_data[n][m - 2] = legendre_m_2
 
-                    if n in legendre_data and m in legendre_data[n]:
+                    # Calculate the Legendre functions element (p_nm(n,m))
+                    existence_status = legendre_data_existence(n, m)
+                    if existence_status:
                         legendre_m = retrieve_legendre_data(n, m)
                     else:
                         legendre_m = normal_pnm(n, m, np.sin(phi))
@@ -170,7 +179,9 @@ def Txx_function(r, phi, landa):
                             legendre_data[n] = {}
                         legendre_data[n][m] = legendre_m
 
-                    if n in legendre_data and m + 2 in legendre_data[n]:
+                    # Calculate the Legendre functions element (p_nm(n,m+2))
+                    existence_status = legendre_data_existence(n, m + 2)
+                    if existence_status:
                         legendre_m_2_plus = retrieve_legendre_data(n, m + 2)
                     else:
                         legendre_m_2_plus = normal_pnm(n, m + 2, np.sin(phi))
