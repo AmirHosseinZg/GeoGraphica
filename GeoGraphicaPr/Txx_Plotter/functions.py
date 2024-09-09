@@ -1,6 +1,8 @@
 from mpmath import mp, mpf, sqrt, factorial
 from GeoGraphicaPr.Txx_Plotter import EGM96_data, Constant
 import numpy as np
+import threading
+import os
 
 # Load EGM96 data and constants
 EGM96_data_dictionary = EGM96_data.data
@@ -18,6 +20,9 @@ mp.dps = PRECISION
 
 # Initialize a dictionary to store computed Legendre polynomial data
 legendre_data = {}
+
+# Initialize a single lock for thread-safe access to data
+threading_lock = threading.Lock()
 
 
 def legendre_data_existence(n, m):
@@ -224,8 +229,11 @@ def normal_pnm(n, m, t):
 
 part_two = mpf(0)  # Part two of Txx function calculation
 
+number_of_threads = os.cpu_count()  # os.cpu_count() returns the number of cpu cores ( Determine number of CPU cores)
+chunk_size = (Nmax + 1) // number_of_threads
 
-def Txx_function_calculation(r, phi, landa, lower_bound, upper_bound):
+
+def compute_legendre_chunk(r, phi, landa, lower_bound, upper_bound):
     """
     Perform the calculation for the Txx function using given parameters.
 
@@ -237,9 +245,11 @@ def Txx_function_calculation(r, phi, landa, lower_bound, upper_bound):
     - upper_bound (int): Upper bound for iteration.
     """
     global part_two
+    global legendre_data
+    global threading_lock
     ratio = mpf(A) / mpf(r)
 
-    for n in range(2, Nmax + 1):
+    for n in range(lower_bound, upper_bound):
         for m in range(0, n + 1):
             try:
                 # Fetch coefficients
@@ -251,35 +261,36 @@ def Txx_function_calculation(r, phi, landa, lower_bound, upper_bound):
                 b = mpf(float(b_nm(n, m)))
                 c = mpf(float(c_nm(n, m)))
 
-                # Calculate the Legendre functions element (p_nm(n,m-2))
-                existence_status = legendre_data_existence(n, m - 2)
-                if existence_status:
-                    legendre_m_2 = retrieve_legendre_data(n, m - 2)
-                else:
-                    legendre_m_2 = normal_pnm(n, m - 2, np.sin(phi))
-                    if n not in legendre_data:
-                        legendre_data[n] = {}
-                    legendre_data[n][m - 2] = legendre_m_2
+                with threading_lock:
+                    # Calculate the Legendre functions element (p_nm(n,m-2))
+                    existence_status = legendre_data_existence(n, m - 2)
+                    if existence_status:
+                        legendre_m_2 = retrieve_legendre_data(n, m - 2)
+                    else:
+                        legendre_m_2 = normal_pnm(n, m - 2, np.sin(phi))
+                        if n not in legendre_data:
+                            legendre_data[n] = {}
+                        legendre_data[n][m - 2] = legendre_m_2
 
-                # Calculate the Legendre functions element (p_nm(n,m))
-                existence_status = legendre_data_existence(n, m)
-                if existence_status:
-                    legendre_m = retrieve_legendre_data(n, m)
-                else:
-                    legendre_m = normal_pnm(n, m, np.sin(phi))
-                    if n not in legendre_data:
-                        legendre_data[n] = {}
-                    legendre_data[n][m] = legendre_m
+                    # Calculate the Legendre functions element (p_nm(n,m))
+                    existence_status = legendre_data_existence(n, m)
+                    if existence_status:
+                        legendre_m = retrieve_legendre_data(n, m)
+                    else:
+                        legendre_m = normal_pnm(n, m, np.sin(phi))
+                        if n not in legendre_data:
+                            legendre_data[n] = {}
+                        legendre_data[n][m] = legendre_m
 
-                # Calculate the Legendre functions element (p_nm(n,m+2))
-                existence_status = legendre_data_existence(n, m + 2)
-                if existence_status:
-                    legendre_m_2_plus = retrieve_legendre_data(n, m + 2)
-                else:
-                    legendre_m_2_plus = normal_pnm(n, m + 2, np.sin(phi))
-                    if n not in legendre_data:
-                        legendre_data[n] = {}
-                    legendre_data[n][m + 2] = legendre_m_2_plus
+                    # Calculate the Legendre functions element (p_nm(n,m+2))
+                    existence_status = legendre_data_existence(n, m + 2)
+                    if existence_status:
+                        legendre_m_2_plus = retrieve_legendre_data(n, m + 2)
+                    else:
+                        legendre_m_2_plus = normal_pnm(n, m + 2, np.sin(phi))
+                        if n not in legendre_data:
+                            legendre_data[n] = {}
+                        legendre_data[n][m + 2] = legendre_m_2_plus
 
                 # Compute the power term
                 power_term = mpf(pow(ratio, n + 3))
@@ -293,7 +304,8 @@ def Txx_function_calculation(r, phi, landa, lower_bound, upper_bound):
                         mpf(a * legendre_m_2) + (mpf((b - (n + 1) * (n + 2))) * legendre_m) + (
                         c * legendre_m_2_plus))
 
-                part_two += term
+                with threading_lock:
+                    part_two += term
 
             except KeyError as ke:
                 print(f"KeyError: n={n}, m={m} - {ke}")
@@ -303,6 +315,7 @@ def Txx_function_calculation(r, phi, landa, lower_bound, upper_bound):
                 print(f"OverflowError: n={n}, m={m} - {oe}")
             except Exception as e:
                 print(f"Error in iteration n={n}, m={m}: {e}")
+    print(f"Thread finished processing from n={lower_bound} to n={upper_bound}")
 
 
 def Txx_function(r, phi, landa):
@@ -322,8 +335,25 @@ def Txx_function(r, phi, landa):
 
         part_one = (mpf(1) / mpf(EOTVOS)) * ((mpf(Gm) / (mpf(A) ** mpf(3))))
 
+        threads_pool = []
+
+        # Create and start threads manually
+        for i in range(number_of_threads):
+            lower_bound = i * chunk_size + 2
+            upper_bound = min((i + 1) * chunk_size + 2, Nmax + 1)
+            thread = threading.Thread(target=compute_legendre_chunk, args=(r, phi, landa, lower_bound, upper_bound))
+            threads_pool.append(thread)
+            thread.start()
+
+        # Wait for all threads to finish
+        for thread in threads_pool:
+            thread.join()
+
         # Final result
         result = part_one * part_two
+
+        legendre_data.clear()
+
         return result
 
     except Exception as e:
