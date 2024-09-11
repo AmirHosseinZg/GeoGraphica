@@ -214,6 +214,9 @@ def Txx_function(r, phi, landa):
 
         # Final result
         result = part_one * part_two
+
+        legendre_data.clear()
+
         return result
 
     except Exception as e:
