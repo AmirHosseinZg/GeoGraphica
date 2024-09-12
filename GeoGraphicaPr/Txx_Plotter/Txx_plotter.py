@@ -40,12 +40,28 @@ def plot_graph():
         Txx_values = np.zeros((len(landa_range), len(phi_range)))
 
         # Calculate Txx values
-        for i, landa in enumerate(landa_range):
-            for j, phi in enumerate(phi_range):
-                result = functions.Txx_function(r, phi, landa)
-                print(f"landa = {landa},phi = {phi},Txx(landa,phi) = {result}")
-                Txx_values[i, j] = result
+        # for i, landa in enumerate(landa_range):
+        #     for j, phi in enumerate(phi_range):
+        #         result = functions.Txx_function(r, phi, landa)
+        #         print(f"landa = {landa},phi = {phi},Txx(landa,phi) = {result}")
+        #         Txx_values[i, j] = result
 
+        # input manually the data
+        list1 = [-71.801965490127713434, -84.398795356459194127, -78.446212769524783884, -73.835622106115580208,
+                 -72.700264980084424304]
+        list2 = [-73.598232191375702387, -83.903631976890457738, -71.758302887084399903, -77.329656098854823543,
+                 -76.224258015429363181]
+        list3 = [-76.107635310711322735, -73.338602632907995252, -76.706483249978871592, -83.196567693392984932,
+                 -71.176268395706854579]
+        list4 = [-75.962068583923879351, -64.240101619566548434, -85.983387674377964636, -81.486942737915509376,
+                 -64.348513862312606824]
+        list5 = [-71.291576888951809049, -69.323676611527419178, -87.211709607239589741, -73.186455967003344677,
+                 -67.249344827700329196]
+        Txx_values[0] = list1
+        Txx_values[1] = list2
+        Txx_values[2] = list3
+        Txx_values[3] = list4
+        Txx_values[4] = list5
         # Plot the filled contour
         fig, ax = plt.subplots()
 
@@ -56,6 +72,10 @@ def plot_graph():
         # Add contour lines on top
         contour_lines = ax.contour(Landa, Phi, Txx_values, levels=int(contours.get()), colors='black',
                                    linewidths=0.5)
+        # Setting the division of the axes base on resolution
+        ax.set_xticks(
+            np.arange(longitude_lowerbound_int, longitude_upperbound_int + resolution_float, resolution_float))
+        ax.set_yticks(np.arange(latitude_lowerbound_int, latitude_upperbound_int + resolution_float, resolution_float))
 
         # Add a colorbar to show the mapping of values to colors
         colorbar = fig.colorbar(contour_filled, ax=ax, label='Function Value')
