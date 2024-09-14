@@ -332,6 +332,7 @@ def Txx_function(r, phi, landa):
     """
     try:
         global legendre_data
+        global part_two
 
         part_one = (mpf(1) / mpf(EOTVOS)) * ((mpf(Gm) / (mpf(A) ** mpf(3))))
 
@@ -353,6 +354,7 @@ def Txx_function(r, phi, landa):
         result = part_one * part_two
 
         legendre_data.clear()
+        part_two = mpf(0)
 
         return result
 
