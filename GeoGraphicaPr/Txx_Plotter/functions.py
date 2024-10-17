@@ -25,6 +25,25 @@ legendre_data = {}
 threading_lock = threading.Lock()
 
 
+def convert_seconds(seconds):
+    """
+    Convert a given number of seconds into days, hours, minutes, and seconds.
+
+    Args:
+        seconds (int): The total number of seconds to be converted.
+
+    Returns:
+        str: A string in the format 'X days, X hours, X minutes, X seconds'.
+    """
+    days = seconds // (24 * 3600)
+    seconds = seconds % (24 * 3600)
+    hours = seconds // 3600
+    seconds %= 3600
+    minutes = seconds // 60
+    seconds %= 60
+    return f"{days} days, {hours} hours, {minutes} minutes, {seconds} seconds"
+
+
 def legendre_data_existence(n, m):
     """
     Check if the Legendre polynomial data for given indices n, m exists.
