@@ -4,7 +4,7 @@ import csv
 data = {}
 
 # Specify the path to your CSV file
-csv_file_path = "H:\\Zakeri\\Samadi_pr\\GeoGraphica\\Sources\\EGM96.csv"
+csv_file_path = "main_project_folder/Phase_2/database/EGM96.csv"
 
 # Open the CSV file
 with open(csv_file_path, mode='r', newline='') as file:

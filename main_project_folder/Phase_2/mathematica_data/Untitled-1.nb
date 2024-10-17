@@ -1,0 +1,138 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      4633,        130]
+NotebookOptionsPosition[      4127,        112]
+NotebookOutlinePosition[      4554,        129]
+CellTagsIndexPosition[      4511,        126]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"NormalPnm", "[", 
+     RowBox[{"n_Integer", ",", "m_Integer", ",", "x_"}], "]"}], ":=", 
+    RowBox[{"Piecewise", "[", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Sqrt", "[", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"2", " ", "n"}], "+", "1"}], ")"}], " ", 
+           RowBox[{"(", 
+            RowBox[{"2", "-", 
+             RowBox[{"KroneckerDelta", "[", 
+              RowBox[{"m", ",", "0"}], "]"}]}], ")"}], " ", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"n", "-", 
+               RowBox[{"Abs", "[", "m", "]"}]}], ")"}], "!"}], "/", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"n", "+", 
+               RowBox[{"Abs", "[", "m", "]"}]}], ")"}], "!"}]}]}], "]"}], " ", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"-", "1"}], ")"}], "^", "m"}], " ", 
+         RowBox[{"LegendreP", "[", 
+          RowBox[{"n", ",", 
+           RowBox[{"Abs", "[", "m", "]"}], ",", "x"}], "]"}]}], ",", 
+        RowBox[{"n", ">=", 
+         RowBox[{"Abs", "[", "m", "]"}]}]}], "}"}], "}"}], "]"}]}], ";"}], 
+  "\n", "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"n", "=", "91"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"m", "=", 
+   RowBox[{"-", "3"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"x", "=", 
+    RowBox[{"Sin", "[", "0.55850", "]"}]}], ";"}], "\n", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"result", "=", 
+    RowBox[{"NormalPnm", "[", 
+     RowBox[{"n", ",", "m", ",", "x"}], "]"}]}], ";"}], "\n", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"Print", "[", 
+  RowBox[{
+  "\"\<The value of NormalPnm[\>\"", ",", "n", ",", "\"\<, \>\"", ",", "m", 
+   ",", "\"\<, Sin(0.55850)] is: \>\"", ",", "result"}], 
+  "]"}], "\n"}], "Input",
+ CellChangeTimes->{{3.9341579742195807`*^9, 3.9341579742205796`*^9}, {
+   3.934158078159354*^9, 3.9341580799915967`*^9}, {3.9341583404304485`*^9, 
+   3.934158349930314*^9}, {3.934159980406808*^9, 3.9341599808573236`*^9}, 
+   3.934160034664791*^9, 3.934161680500845*^9, {3.9341622781603255`*^9, 
+   3.934162285125082*^9}, {3.9341623385503874`*^9, 3.9341623387813916`*^9}, {
+   3.9341651705858097`*^9, 3.934165176343075*^9}, {3.9341655320079823`*^9, 
+   3.9341655355340986`*^9}, {3.9341788447274694`*^9, 
+   3.9341788467302847`*^9}, {3.9343647269084806`*^9, 
+   3.9343647302763195`*^9}, {3.934364992420638*^9, 3.934364992936221*^9}, {
+   3.93436535621756*^9, 3.9343653612796535`*^9}, {3.9343658619498615`*^9, 
+   3.9343658644652824`*^9}, {3.934365909546693*^9, 3.9343659270603848`*^9}},
+ CellLabel->"In[43]:=",ExpressionUUID->"f5bf7082-0a6c-466d-8388-8b7b621c6ee0"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"The value of NormalPnm[\"\>", "\[InvisibleSpace]", "91", 
+   "\[InvisibleSpace]", "\<\", \"\>", "\[InvisibleSpace]", 
+   RowBox[{"-", "3"}], "\[InvisibleSpace]", "\<\", Sin(0.55850)] is: \"\>", 
+   "\[InvisibleSpace]", "1.1985070564273756`"}],
+  SequenceForm[
+  "The value of NormalPnm[", 91, ", ", -3, ", Sin(0.55850)] is: ", 
+   1.1985070564273756`],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.934364755525168*^9, 3.934364995784768*^9, 3.934365368937004*^9, 
+   3.9343658664933014`*^9, {3.9343659108491287`*^9, 3.9343659274822025`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[43]:=",ExpressionUUID->"708e4b5b-f448-4da3-836e-55331c62b163"]
+}, Open  ]]
+},
+WindowSize->{1584, 819},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+Magnification:>1.2 Inherited,
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (June 19, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"6e41a502-704f-4775-8fc7-5c4d0e20f1e4"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 2825, 70, 312, "Input",ExpressionUUID->"f5bf7082-0a6c-466d-8388-8b7b621c6ee0"],
+Cell[3408, 94, 703, 15, 28, "Print",ExpressionUUID->"708e4b5b-f448-4da3-836e-55331c62b163"]
+}, Open  ]]
+}
+]
+*)
+

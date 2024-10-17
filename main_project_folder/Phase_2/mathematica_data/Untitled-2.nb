@@ -1,0 +1,165 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      5212,        155]
+NotebookOptionsPosition[      4733,        138]
+NotebookOutlinePosition[      5132,        154]
+CellTagsIndexPosition[      5089,        151]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "Define", " ", "the", " ", "Normalized", " ", "Associated", " ", 
+    "Legendre", " ", "Function"}], "*)"}], 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"NormalPnm", "[", 
+      RowBox[{"n_Integer", ",", "m_Integer", ",", "x_"}], "]"}], ":=", 
+     RowBox[{"Piecewise", "[", 
+      RowBox[{"{", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Sqrt", "[", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"2", " ", "n"}], "+", "1"}], ")"}], " ", 
+            RowBox[{"(", 
+             RowBox[{"2", "-", 
+              RowBox[{"KroneckerDelta", "[", 
+               RowBox[{"m", ",", "0"}], "]"}]}], ")"}], " ", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{"n", "-", 
+                RowBox[{"Abs", "[", "m", "]"}]}], ")"}], "!"}], "/", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{"n", "+", 
+                RowBox[{"Abs", "[", "m", "]"}]}], ")"}], "!"}]}]}], "]"}], 
+          " ", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"-", "1"}], ")"}], "^", "m"}], " ", 
+          RowBox[{"LegendreP", "[", 
+           RowBox[{"n", ",", 
+            RowBox[{"Abs", "[", "m", "]"}], ",", "x"}], "]"}]}], ",", 
+         RowBox[{"n", ">=", 
+          RowBox[{"Abs", "[", "m", "]"}]}]}], "}"}], "}"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", "\n", 
+   RowBox[{"(*", 
+    RowBox[{"Define", " ", "the", " ", "value", " ", "of", " ", "x"}], "*)"}],
+    "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"x", "=", 
+     RowBox[{"Sin", "[", "0.55850", "]"}]}], ";"}], "\[IndentingNewLine]", 
+   "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Compute", " ", "the", " ", "values", " ", "for", " ", "the", " ", 
+     "specified", " ", "ranges", " ", "of", " ", "n", " ", "and", " ", "m"}], 
+    "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"results", "=", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"n", ",", "m", ",", 
+         RowBox[{"NormalPnm", "[", 
+          RowBox[{"n", ",", "m", ",", "x"}], "]"}]}], "}"}], ",", 
+       RowBox[{"(*", 
+        RowBox[{
+         RowBox[{"Create", " ", "a", " ", "table", " ", "with", " ", "n"}], 
+         ",", "m", ",", 
+         RowBox[{"and", " ", "the", " ", "result"}]}], "*)"}], 
+       RowBox[{"{", 
+        RowBox[{"n", ",", "2", ",", "360"}], "}"}], ",", 
+       RowBox[{"(*", 
+        RowBox[{"Range", " ", "for", " ", "n"}], "*)"}], 
+       RowBox[{"{", 
+        RowBox[{"m", ",", "0", ",", "n"}], "}"}]}], " ", 
+      RowBox[{"(*", 
+       RowBox[{
+        RowBox[{"Range", " ", "for", " ", "m"}], ",", 
+        RowBox[{"from", " ", "0", " ", "to", " ", "n"}]}], "*)"}], "]"}]}], 
+    ";"}], "\[IndentingNewLine]", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "Flatten", " ", "the", " ", "results", " ", "into", " ", "a", " ", 
+      "two"}], "-", 
+     RowBox[{"dimensional", " ", "list", " ", "for", " ", "exporting"}]}], 
+    "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"flatResults", "=", 
+     RowBox[{"Flatten", "[", 
+      RowBox[{"results", ",", "1"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Export", " ", "the", " ", "results", " ", "to", " ", "an", " ", "Excel", 
+     " ", "file"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Export", "[", 
+     RowBox[{
+     "\"\<NormalizedLegendreResults.xlsx\>\"", ",", "flatResults", ",", 
+      "\"\<XLSX\>\""}], "]"}], ";"}], "\n", "\[IndentingNewLine]", 
+   RowBox[{
+   "Print", "[", 
+    "\"\<The results have been saved to NormalizedLegendreResults.xlsx\>\"", 
+    "]"}], "\n"}]}]], "Input",
+ CellChangeTimes->{{3.934158603098365*^9, 3.9341586031003294`*^9}},
+ CellLabel->"In[13]:=",ExpressionUUID->"e83bc423-6099-4b58-8210-47219dc4b814"],
+
+Cell[BoxData["\<\"The results have been saved to \
+NormalizedLegendreResults.xlsx\"\>"], "Print",
+ CellChangeTimes->{3.934158645648611*^9},
+ CellLabel->
+  "During evaluation of \
+In[13]:=",ExpressionUUID->"ada78969-7796-4612-8bda-c80d76f54ea1"]
+}, Open  ]]
+},
+WindowSize->{557, 606},
+WindowMargins->{{326, Automatic}, {Automatic, 47}},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (June 19, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"b39376f5-a928-418f-96a6-b8b023e9d516"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 3890, 106, 550, "Input",ExpressionUUID->"e83bc423-6099-4b58-8210-47219dc4b814"],
+Cell[4473, 130, 244, 5, 23, "Print",ExpressionUUID->"ada78969-7796-4612-8bda-c80d76f54ea1"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

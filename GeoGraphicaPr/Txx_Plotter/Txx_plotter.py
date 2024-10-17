@@ -75,7 +75,7 @@ def plot_graph():
 
         # input manually the data for res0.1
         file_path = \
-            "D:\\programming\Projects\\GeoGraphica\\Sources\\Txx_OutPuts_example\\res0.1\\res0.1_data_outputs.xlsx"
+            "main_project_folder/Phase_2/Txx_OutPuts_example/res0.1/res0.1_data_outputs.xlsx"
         df = pd.read_excel(file_path)
 
         for index, row in df.iterrows():
