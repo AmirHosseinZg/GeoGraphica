@@ -1,0 +1,202 @@
+(* Content-type: application/vnd.wolfram.cdf.text *)
+
+(*** Wolfram CDF File ***)
+(* http://www.wolfram.com/cdf *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*************************************************************************)
+(*                                                                       *)
+(*                                                                       *)
+(*  This file was created under the Wolfram Enterprise licensing terms.  *)
+(*                                                                       *)
+(*       For additional information concerning CDF licensing see:        *)
+(*                                                                       *)
+(*        www.wolfram.com/cdf/adopting-cdf/licensing-options.html        *)
+(*                                                                       *)
+(*                                                                       *)
+(*                                                                       *)
+(*************************************************************************)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[      1060,         20]
+NotebookDataLength[      6181,        181]
+NotebookOptionsPosition[      6692,        179]
+NotebookOutlinePosition[      7128,        196]
+CellTagsIndexPosition[      7085,        193]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"Load", " ", "the", " ", "CSV", " ", "file"}], "*)"}], 
+  RowBox[{
+   RowBox[{
+    RowBox[{"data", "=", 
+     RowBox[{"Import", "[", 
+      RowBox[{
+      "\"\<D:\\\\programming\\\\Projects\\\\GeoGraphica\\\\GeoGraphicaPr\\\\\
+sources\\\\final_phase\\\\all_sources\\\\project_result_csv_files\\\\txxTOTAL.\
+csv\>\"", ",", "\"\<CSV\>\""}], "]"}]}], ";"}], "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"Extract", " ", "longitude"}], ",", "latitude", ",", 
+     RowBox[{"and", " ", "Txx", " ", "values"}]}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"longitude", "=", 
+     RowBox[{"Rest", "[", 
+      RowBox[{"data", "[", 
+       RowBox[{"[", "1", "]"}], "]"}], "]"}]}], ";"}], " ", 
+   RowBox[{"(*", 
+    RowBox[{"First", " ", "row", " ", 
+     RowBox[{"(", 
+      RowBox[{"excluding", " ", "the", " ", "first", " ", "column"}], ")"}]}],
+     "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"latitude", "=", 
+     RowBox[{"Rest", "[", 
+      RowBox[{"data", "[", 
+       RowBox[{"[", 
+        RowBox[{"All", ",", "1"}], "]"}], "]"}], "]"}]}], ";"}], " ", 
+   RowBox[{"(*", 
+    RowBox[{"First", " ", "column", " ", 
+     RowBox[{"(", 
+      RowBox[{"excluding", " ", "the", " ", "first", " ", "row"}], ")"}]}], 
+    "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"TxxValues", "=", 
+     RowBox[{"Rest", "[", 
+      RowBox[{"Rest", "[", "data", "]"}], "]"}]}], ";"}], " ", 
+   RowBox[{"(*", 
+    RowBox[{
+    "The", " ", "remaining", " ", "grid", " ", "of", " ", "Txx", " ", 
+     "values"}], "*)"}], "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "Plot", " ", "Txx", " ", "vs", " ", "Longitude", " ", "for", " ", 
+      "\[CurlyPhi]"}], "=", 
+     RowBox[{"33", "\[Degree]"}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"phiFixed", "=", "33"}], ";"}], " ", 
+   RowBox[{"(*", 
+    RowBox[{"Fixed", " ", "latitude"}], "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"phiIndex", "=", 
+     RowBox[{"First", "@", 
+      RowBox[{"FirstPosition", "[", 
+       RowBox[{
+        RowBox[{"Abs", "[", 
+         RowBox[{"latitude", "-", "phiFixed"}], "]"}], ",", 
+        RowBox[{"Min", "[", 
+         RowBox[{"Abs", "[", 
+          RowBox[{"latitude", "-", "phiFixed"}], "]"}], "]"}]}], "]"}]}]}], 
+    ";"}], " ", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Find", " ", "the", " ", "nearest", " ", "latitude", " ", "index"}], 
+    "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"TxxVsLongitude", "=", 
+     RowBox[{"TxxValues", "[", 
+      RowBox[{"[", "phiIndex", "]"}], "]"}]}], ";"}], " ", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Extract", " ", "Txx", " ", "values", " ", "for", " ", "the", " ", 
+     "fixed", " ", "latitude"}], "*)"}], "\[IndentingNewLine]", "\n", 
+   RowBox[{"ListLinePlot", "[", 
+    RowBox[{
+     RowBox[{"Transpose", "[", 
+      RowBox[{"{", 
+       RowBox[{"longitude", ",", "TxxVsLongitude"}], "}"}], "]"}], ",", 
+     RowBox[{
+     "PlotLabel", "->", 
+      "\"\<Txx vs Longitude for \[CurlyPhi]=33\[Degree]\>\""}], ",", 
+     RowBox[{"AxesLabel", "->", 
+      RowBox[{"{", 
+       RowBox[{"\"\<Longitude (degrees)\>\"", ",", "\"\<Txx (Eotvos)\>\""}], 
+       "}"}]}], ",", 
+     RowBox[{"PlotStyle", "->", "Blue"}], ",", 
+     RowBox[{"GridLines", "->", "Automatic"}]}], "]"}], "\n", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "Plot", " ", "Txx", " ", "vs", " ", "Latitude", " ", "for", " ", 
+      "\[Lambda]"}], "=", 
+     RowBox[{"51", "\[Degree]"}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"landaFixed", "=", "51"}], ";"}], " ", 
+   RowBox[{"(*", 
+    RowBox[{"Fixed", " ", "longitude"}], "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"landaIndex", "=", 
+     RowBox[{"First", "@", 
+      RowBox[{"FirstPosition", "[", 
+       RowBox[{
+        RowBox[{"Abs", "[", 
+         RowBox[{"longitude", "-", "landaFixed"}], "]"}], ",", 
+        RowBox[{"Min", "[", 
+         RowBox[{"Abs", "[", 
+          RowBox[{"longitude", "-", "landaFixed"}], "]"}], "]"}]}], "]"}]}]}],
+     ";"}], " ", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Find", " ", "the", " ", "nearest", " ", "longitude", " ", "index"}], 
+    "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"TxxVsLatitude", "=", 
+     RowBox[{"TxxValues", "[", 
+      RowBox[{"[", 
+       RowBox[{"All", ",", "landaIndex"}], "]"}], "]"}]}], ";"}], " ", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Extract", " ", "Txx", " ", "values", " ", "for", " ", "the", " ", 
+     "fixed", " ", "longitude"}], "*)"}], "\[IndentingNewLine]", "\n", 
+   RowBox[{"ListLinePlot", "[", 
+    RowBox[{
+     RowBox[{"Transpose", "[", 
+      RowBox[{"{", 
+       RowBox[{"latitude", ",", "TxxVsLatitude"}], "}"}], "]"}], ",", 
+     RowBox[{
+     "PlotLabel", "->", "\"\<Txx vs Latitude for \[Lambda]=51\[Degree]\>\""}],
+      ",", 
+     RowBox[{"AxesLabel", "->", 
+      RowBox[{"{", 
+       RowBox[{"\"\<Latitude (degrees)\>\"", ",", "\"\<Txx (Eotvos)\>\""}], 
+       "}"}]}], ",", 
+     RowBox[{"PlotStyle", "->", "Red"}], ",", 
+     RowBox[{"GridLines", "->", "Automatic"}]}], "]"}], "\n"}]}]], "Input",
+ CellChangeTimes->{{3.946985391307495*^9, 3.946985391307495*^9}, 
+   3.9469855112253513`*^9},ExpressionUUID->"3dace667-4d2b-1840-9be6-\
+efac59df7ff3"]
+},
+WindowSize->{1152, 585.6},
+WindowMargins->{{
+  Automatic, -5.399999999999864}, {-5.399999999999977, Automatic}},
+FrontEndVersion->"14.1 for Microsoft Windows (64-bit) (July 16, 2024)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"5253bf18-16a5-c745-8a71-20900a61304f"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[1460, 33, 5228, 144, 484, "Input",ExpressionUUID->"3dace667-4d2b-1840-9be6-efac59df7ff3"]
+}
+]
+*)
+
