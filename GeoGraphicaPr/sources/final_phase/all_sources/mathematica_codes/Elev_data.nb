@@ -1,0 +1,106 @@
+(* Content-type: application/vnd.wolfram.cdf.text *)
+
+(*** Wolfram CDF File ***)
+(* http://www.wolfram.com/cdf *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*************************************************************************)
+(*                                                                       *)
+(*                                                                       *)
+(*  This file was created under the Wolfram Enterprise licensing terms.  *)
+(*                                                                       *)
+(*       For additional information concerning CDF licensing see:        *)
+(*                                                                       *)
+(*        www.wolfram.com/cdf/adopting-cdf/licensing-options.html        *)
+(*                                                                       *)
+(*                                                                       *)
+(*                                                                       *)
+(*************************************************************************)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[      1060,         20]
+NotebookDataLength[      2868,         85]
+NotebookOptionsPosition[      3197,         80]
+NotebookOutlinePosition[      3598,         96]
+CellTagsIndexPosition[      3555,         93]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"\:0645\:0631\:062d\:0644\:0647", " ", 
+    RowBox[{"\:0627\:0648\:0644", ":", 
+     RowBox[{
+     "\:0628\:0627\:0631\:06af\:0630\:0627\:0631\:06cc", " ", 
+      "\:062f\:0627\:062f\:0647\:200c\:0647\:0627", " ", "\:0627\:0632", " ", 
+      "\:0641\:0627\:06cc\:0644", " ", "ZIP"}]}]}], "*)"}], 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Elev", "=", 
+     RowBox[{"Import", "[", 
+      RowBox[{
+      "\"\<D:\\\\programming\\\\Projects\\\\GeoGraphica\\\\main_project_\
+folder\\\\final_phase\\\\all_sources\\\\database\\\\gt30e020n40_dem.zip\>\"", 
+       ",", "\"\<Data\>\""}], "]"}]}], ";"}], "\n", "\[IndentingNewLine]", 
+   "\n", 
+   RowBox[{
+    RowBox[{"firstElement", "=", 
+     RowBox[{"Elev", "[", 
+      RowBox[{"[", 
+       RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Print", "[", "firstElement", "]"}], ";"}], "\n", 
+   RowBox[{"Dimensions", "[", "Elev", "]"}], "\[IndentingNewLine]", 
+   "\n"}]}]], "Input",
+ CellChangeTimes->{{3.942672691823309*^9, 3.9426727287315807`*^9}, {
+   3.942702755095402*^9, 3.9427027827971077`*^9}, {3.9427038059953175`*^9, 
+   3.942703859195711*^9}, 3.942704284763359*^9},
+ CellLabel->"In[10]:=",ExpressionUUID->"212cc3b0-8a33-814f-9005-c9ecb5080cdf"],
+
+Cell[BoxData["1123"], "Print",
+ CellChangeTimes->{3.9427038689616337`*^9, 3.942704292196226*^9},
+ CellLabel->
+  "During evaluation of \
+In[10]:=",ExpressionUUID->"29ac73ce-08e9-d449-8107-79f3c2c8ee4b"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"600", ",", "480"}], "}"}]], "Output",
+ CellChangeTimes->{3.9427042923573017`*^9},
+ CellLabel->"Out[13]=",ExpressionUUID->"38a54da5-a979-564f-b73c-b62eff45ded9"]
+}, Open  ]]
+},
+WindowSize->{1141.2, 574.8},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"14.1 for Microsoft Windows (64-bit) (July 16, 2024)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"ae28c77f-06ec-7843-b836-f4e32bc2c14c"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[1482, 35, 1292, 30, 180, "Input",ExpressionUUID->"212cc3b0-8a33-814f-9005-c9ecb5080cdf"],
+Cell[2777, 67, 201, 4, 22, "Print",ExpressionUUID->"29ac73ce-08e9-d449-8107-79f3c2c8ee4b"],
+Cell[2981, 73, 200, 4, 32, "Output",ExpressionUUID->"38a54da5-a979-564f-b73c-b62eff45ded9"]
+}, Open  ]]
+}
+]
+*)
+

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Txx Plotter</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Txx Plotter</h1>
+
+    <div class="input-group">
+        <label>Longitude Range From:</label>
+        <input type="number" id="longitude_lower" placeholder="Enter min longitude">
+        <label>To:</label>
+        <input type="number" id="longitude_upper" placeholder="Enter max longitude">
+    </div>
+
+    <div class="input-group">
+        <label>Latitude Range From:</label>
+        <input type="number" id="latitude_lower" placeholder="Enter min latitude">
+        <label>To:</label>
+        <input type="number" id="latitude_upper" placeholder="Enter max latitude">
+    </div>
+
+    <div class="input-group">
+        <label>Longitude Resolution:</label>
+        <input type="number" id="longitude_res" placeholder="Enter resolution">
+        <label>Latitude Resolution:</label>
+        <input type="number" id="latitude_res" placeholder="Enter resolution">
+    </div>
+
+    <div class="input-group">
+        <label>Save Path:</label>
+        <input type="text" id="save_path" readonly>
+        <button onclick="selectDirectory()">Browse</button>
+    </div>
+
+    <div class="input-group">
+        <label>Colorbar Min:</label>
+        <input type="number" id="colorbar_min" placeholder="Enter Min Value">
+    </div>
+
+    <div class="input-group">
+        <label>Colorbar Max:</label>
+        <input type="number" id="colorbar_max" placeholder="Enter Max Value">
+    </div>
+
+    <div class="input-group">
+        <input type="checkbox" id="auto_colorbar" onchange="toggleColorbar()"> Auto Colorbar
+    </div>
+
+    <div class="input-group">
+        <label>Contour Levels :</label>
+        <input type="number" id="contour_levels" placeholder="Enter your desired numbers of contour lines">
+        <input type="checkbox" id="auto_contour" onchange="toggleContour()"> Use Default
+    </div>
+
+    <div class="input-group">
+        <label>Select Colormap:</label>
+        <select id="colormap"></select>
+        <input type="checkbox" id="default_colormap" onchange="toggleColormap()"> Default ColorMap
+    </div>
+
+    <button onclick="plotGraph()">PLOT</button>
+    <p id="status">Awaiting input...</p>
+</div>
+
+<script src="/static/script.js"></script>
+</body>
+</html>

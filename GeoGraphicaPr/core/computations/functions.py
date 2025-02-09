@@ -1,4 +1,5 @@
-from GeoGraphicaPr.Plotter.core.computations import Constant, EGM96_data
+from GeoGraphicaPr.core.computations import Constant
+from GeoGraphicaPr.core.computations import EGM96_data
 from mpmath import mp, mpf, sqrt, factorial
 import numpy as np
 import threading
@@ -828,7 +829,7 @@ def Txx_function(r, phi, landa, maximum_of_counter):
         for i in range(number_of_threads):
             lower_bound = i * chunk_size + 2
             upper_bound = min((i + 1) * chunk_size + 2, Nmax + 1)
-            thread = threading.Thread(target=compute_Txx_chunk, args=(r, phi, landa, lower_bound, upper_bound))
+            thread = threading.Thread(target=compute_Txx_chunk, args=(r, landa, lower_bound, upper_bound))
             threads_pool.append(thread)
             thread.start()
 
@@ -912,7 +913,7 @@ def Txy_function(r, phi, landa, maximum_of_counter):
         for i in range(number_of_threads):
             lower_bound = i * chunk_size + 2
             upper_bound = min((i + 1) * chunk_size + 2, Nmax + 1)
-            thread = threading.Thread(target=compute_Txy_chunk, args=(r, phi, landa, lower_bound, upper_bound))
+            thread = threading.Thread(target=compute_Txy_chunk, args=(r, landa, lower_bound, upper_bound))
             threads_pool.append(thread)
             thread.start()
 
@@ -988,7 +989,7 @@ def Txz_function(r, phi, landa, maximum_of_counter):
         for i in range(number_of_threads):
             lower_bound = i * chunk_size + 2
             upper_bound = min((i + 1) * chunk_size + 2, Nmax + 1)
-            thread = threading.Thread(target=compute_Txz_chunk, args=(r, phi, landa, lower_bound, upper_bound))
+            thread = threading.Thread(target=compute_Txz_chunk, args=(r, landa, lower_bound, upper_bound))
             threads_pool.append(thread)
             thread.start()
 
@@ -1072,7 +1073,7 @@ def Tyy_function(r, phi, landa, maximum_of_counter):
         for i in range(number_of_threads):
             lower_bound = i * chunk_size + 2
             upper_bound = min((i + 1) * chunk_size + 2, Nmax + 1)
-            thread = threading.Thread(target=compute_Tyy_chunk, args=(r, phi, landa, lower_bound, upper_bound))
+            thread = threading.Thread(target=compute_Tyy_chunk, args=(r,landa, lower_bound, upper_bound))
             threads_pool.append(thread)
             thread.start()
 
@@ -1144,7 +1145,7 @@ def Tyz_function(r, phi, landa, maximum_of_counter):
         for i in range(number_of_threads):
             lower_bound = i * chunk_size + 2
             upper_bound = min((i + 1) * chunk_size + 2, Nmax + 1)
-            thread = threading.Thread(target=compute_Tyz_chunk, args=(r, phi, landa, lower_bound, upper_bound))
+            thread = threading.Thread(target=compute_Tyz_chunk, args=(r, landa, lower_bound, upper_bound))
             threads_pool.append(thread)
             thread.start()
 
@@ -1210,7 +1211,7 @@ def Tzz_function(r, phi, landa, maximum_of_counter):
         for i in range(number_of_threads):
             lower_bound = i * chunk_size + 2
             upper_bound = min((i + 1) * chunk_size + 2, Nmax + 1)
-            thread = threading.Thread(target=compute_Tzz_chunk, args=(r, phi, landa, lower_bound, upper_bound))
+            thread = threading.Thread(target=compute_Tzz_chunk, args=(r, landa, lower_bound, upper_bound))
             threads_pool.append(thread)
             thread.start()
 
