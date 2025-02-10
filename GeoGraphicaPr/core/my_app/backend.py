@@ -23,7 +23,7 @@ import os
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="GeoGraphicaPr/core/my_app/static"), name="static")
 
 app.add_middleware(
     CORSMiddleware,
@@ -54,7 +54,7 @@ class InputData(BaseModel):
 
 @app.get("/")
 async def home():
-    return FileResponse("templates/index.html")
+    return FileResponse("GeoGraphicaPr/core/my_app/templates/index.html")
 
 
 @app.get("/colormaps")

@@ -1,10 +1,11 @@
 import csv
+from GeoGraphicaPr.utils import files_paths
 
 # Initialize the data dictionary
 data = {}
 
 # Specify the path to your CSV file
-csv_file_path = "../../database/EGM96.csv"
+csv_file_path = files_paths.EGM96_csv_file_path
 
 # Open the CSV file
 with open(csv_file_path, mode='r', newline='') as file:

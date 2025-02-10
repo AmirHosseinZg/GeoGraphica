@@ -1,6 +1,7 @@
-Elev_Matrix_Output_file_path = '../../database/Elev_Matrix_Output.xlsx'
+Elev_Matrix_Output_file_path = "GeoGraphicaPr/database/Elev_Matrix_Output.xlsx"
+EGM96_csv_file_path = "GeoGraphicaPr/database/EGM96.csv"
 
-base_path = '../sources/final_phase/all_sources/project_result_csv_files/new/python'
+base_path = "GeoGraphicaPr/sources/final_phase/all_sources/project_result_csv_files/new/python"
 
 TxxParker_file_name = "TxxParker.csv"
 TxyParker_file_name = "TxyParker.csv"

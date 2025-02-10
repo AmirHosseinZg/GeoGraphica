@@ -18,30 +18,30 @@ def load_data(file_name):
 
 def test():
     TxxParker = load_data(
-        "../../sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxxParker.csv")
+        "GeoGraphicaPr/sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxxParker.csv")
     TxyParker = load_data(
-        "../../sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxyParker.csv")
+        "GeoGraphicaPr/sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxyParker.csv")
     TxzParker = load_data(
-        "../../sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxzParker.csv")
+        "GeoGraphicaPr/sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxzParker.csv")
     TyyParker = load_data(
-        "../../sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TyyParker.csv")
+        "GeoGraphicaPr/sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TyyParker.csv")
     TyzParker = load_data(
-        "../../sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TyzParker.csv")
+        "GeoGraphicaPr/sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TyzParker.csv")
     TzzParker = load_data(
-        "../../sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TzzParker.csv")
+        "GeoGraphicaPr/sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TzzParker.csv")
 
     TxxEGM96 = load_data(
-        "../../sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxxEGM96.csv")
+        "GeoGraphicaPr/sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxxEGM96.csv")
     TxyEGM96 = load_data(
-        "../../sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxyEGM96.csv")
+        "GeoGraphicaPr/sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxyEGM96.csv")
     TxzEGM96 = load_data(
-        "../../sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxzEGM96.csv")
+        "GeoGraphicaPr/sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxzEGM96.csv")
     TyyEGM96 = load_data(
-        "../../sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TyyEGM96.csv")
+        "GeoGraphicaPr/sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TyyEGM96.csv")
     TyzEGM96 = load_data(
-        "../../sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TyzEGM96.csv")
+        "GeoGraphicaPr/sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TyzEGM96.csv")
     TzzEGM96 = load_data(
-        "../../sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TzzEGM96.csv")
+        "GeoGraphicaPr/sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TzzEGM96.csv")
 
     TxxTOTAL = TxxParker + TxxEGM96
     TxyTOTAL = TxyParker + TxyEGM96
