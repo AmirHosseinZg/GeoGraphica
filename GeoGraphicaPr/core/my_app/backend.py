@@ -17,13 +17,16 @@ from GeoGraphicaPr.utils import files_paths
 from fastapi.responses import HTMLResponse
 from tkinter import filedialog
 from typing import Optional
+from GeoGraphicaPr.utils import utility
 import matplotlib.pyplot as plt
 import tkinter as tk
 import os
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="GeoGraphicaPr/core/my_app/static"), name="static")
+# app.mount("/static", StaticFiles(directory="GeoGraphicaPr/core/my_app/static"), name="static")
+static_dir = utility.resource_path("core/my_app/static")
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 app.add_middleware(
     CORSMiddleware,
@@ -54,7 +57,9 @@ class InputData(BaseModel):
 
 @app.get("/")
 async def home():
-    return FileResponse("GeoGraphicaPr/core/my_app/templates/index.html")
+    # return FileResponse("GeoGraphicaPr/core/my_app/templates/index.html")
+    index_path = utility.resource_path("core/my_app/templates/index.html")
+    return FileResponse(index_path)
 
 
 @app.get("/colormaps")
