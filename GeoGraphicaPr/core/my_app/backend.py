@@ -92,19 +92,6 @@ async def plot_graph(data: InputData):
         latitude_resolution = data.latitude_res
         files_paths.base_path = data.save_path
 
-        # (TxxParker, TxyParker, TxzParker,
-        #  TyyParker, TyzParker, TzzParker,
-        #  TxxEGM96, TxyEGM96, TxzEGM96,
-        #  TyyEGM96, TyzEGM96, TzzEGM96,
-        #  TxxTOTAL, TxyTOTAL, TxzTOTAL,
-        #  TyyTOTAL, TyzTOTAL, TzzTOTAL,
-        #  phi_range_deg, landa_range_deg
-        #  ) = compute_gradients(
-        #     longitude_lowerbound_int, longitude_upperbound_int,
-        #     latitude_lowerbound_int, latitude_upperbound_int,
-        #     longitude_resolution, latitude_resolution
-        # )
-
         (TxxParker, TxyParker, TxzParker,
          TyyParker, TyzParker, TzzParker,
          TxxEGM96, TxyEGM96, TxzEGM96,
@@ -112,7 +99,20 @@ async def plot_graph(data: InputData):
          TxxTOTAL, TxyTOTAL, TxzTOTAL,
          TyyTOTAL, TyzTOTAL, TzzTOTAL,
          phi_range_deg, landa_range_deg
-         ) = test_plooter.test()
+         ) = compute_gradients(
+            longitude_lowerbound_int, longitude_upperbound_int,
+            latitude_lowerbound_int, latitude_upperbound_int,
+            longitude_resolution, latitude_resolution
+        )
+
+        # (TxxParker, TxyParker, TxzParker,
+        #  TyyParker, TyzParker, TzzParker,
+        #  TxxEGM96, TxyEGM96, TxzEGM96,
+        #  TyyEGM96, TyzEGM96, TzzEGM96,
+        #  TxxTOTAL, TxyTOTAL, TxzTOTAL,
+        #  TyyTOTAL, TyzTOTAL, TzzTOTAL,
+        #  phi_range_deg, landa_range_deg
+        #  ) = test_plooter.test()
 
         TOTAL_matrices = [TxxTOTAL, TxyTOTAL, TxzTOTAL, TyyTOTAL, TyzTOTAL, TzzTOTAL]
         TOTAL_titles = ["Txx Total", "Txy Total", "Txz Total", "Tyy Total", "Tyz Total", "Tzz Total"]
