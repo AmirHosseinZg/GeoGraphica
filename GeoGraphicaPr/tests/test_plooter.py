@@ -8,6 +8,7 @@ import pandas as pd
 
 from GeoGraphicaPr.utils import files_paths
 from GeoGraphicaPr.utils.files_paths import base_path
+from GeoGraphicaPr.utils import utility
 
 
 def load_data(file_name):
@@ -42,6 +43,32 @@ def test():
         "GeoGraphicaPr/sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TyzEGM96.csv")
     TzzEGM96 = load_data(
         "GeoGraphicaPr/sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TzzEGM96.csv")
+
+    # TxxParker = load_data(utility.resource_path(
+    #     "sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxxParker.csv"))
+    # TxyParker = load_data(utility.resource_path(
+    #     "sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxyParker.csv"))
+    # TxzParker = load_data(utility.resource_path(
+    #     "sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxzParker.csv"))
+    # TyyParker = load_data(utility.resource_path(
+    #     "sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TyyParker.csv"))
+    # TyzParker = load_data(utility.resource_path(
+    #     "sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TyzParker.csv"))
+    # TzzParker = load_data(utility.resource_path(
+    #     "sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TzzParker.csv"))
+    #
+    # TxxEGM96 = load_data(utility.resource_path(
+    #     "sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxxEGM96.csv"))
+    # TxyEGM96 = load_data(utility.resource_path(
+    #     "sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxyEGM96.csv"))
+    # TxzEGM96 = load_data(utility.resource_path(
+    #     "sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TxzEGM96.csv"))
+    # TyyEGM96 = load_data(utility.resource_path(
+    #     "sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TyyEGM96.csv"))
+    # TyzEGM96 = load_data(utility.resource_path(
+    #     "sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TyzEGM96.csv"))
+    # TzzEGM96 = load_data(utility.resource_path(
+    #     "sources/final_phase/all_sources/project_result_csv_files/50-52,32-34,0.5/python/TzzEGM96.csv"))
 
     TxxTOTAL = TxxParker + TxxEGM96
     TxyTOTAL = TxyParker + TxyEGM96

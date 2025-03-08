@@ -28,3 +28,13 @@ button {
     border: none;
     cursor: pointer;
 }
+
+.version {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
