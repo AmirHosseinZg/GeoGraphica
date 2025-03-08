@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import warnings
 import os
+import multiprocessing
 
 # Constants for calculations
 constants = Constant.Constants()
@@ -18,6 +19,28 @@ h = (constants.get_h())
 e2 = (constants.get_e2())
 G = (constants.get_G())
 p = (constants.get_p())
+
+
+def compute_row_generic(i, r_row, phi_row, lambda_row, maximum_of_counter, function):
+    """
+    Generic function to compute a row for a specific tensor.
+
+    Parameters:
+    - i: Current row index.
+    - r_row: Row of radii.
+    - phi_row: Row of latitudes in radians.
+    - lambda_row: Row of longitudes in radians.
+    - maximum_of_counter: Maximum counter value.
+    - function: The function to compute values (Txx_function, Txy_function, etc.).
+
+    Returns:
+    - Computed row.
+    """
+    return [function(r_row[j], phi_row[j], lambda_row[j], maximum_of_counter) for j in range(len(r_row))]
+
+
+def wrapper_compute_row_generic(i, function, r, phi_mesh, lambda_mesh, maximum_of_counter):
+    return compute_row_generic(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, function)
 
 
 def compute_gradients(longitude_lowerbound_int, longitude_upperbound_int,
@@ -328,22 +351,6 @@ def compute_gradients(longitude_lowerbound_int, longitude_upperbound_int,
     # Calculate radius r
     r = np.sqrt(XECEF ** 2 + YECEF ** 2 + ZECEF ** 2)
 
-    def compute_row_generic(i, r_row, phi_row, lambda_row, maximum_of_counter, function):
-        """
-        Generic function to compute a row for a specific tensor.
-
-        Parameters:
-        - i: Current row index.
-        - r_row: Row of radii.
-        - phi_row: Row of latitudes in radians.
-        - lambda_row: Row of longitudes in radians.
-        - maximum_of_counter: Maximum counter value.
-        - function: The function to compute values (Txx_function, Txy_function, etc.).
-
-        Returns:
-        - Computed row.
-        """
-        return [function(r_row[j], phi_row[j], lambda_row[j], maximum_of_counter) for j in range(len(r_row))]
 
     # Calculate maximum_of_counter based on resolution
     maximum_of_counter = int(
@@ -351,41 +358,93 @@ def compute_gradients(longitude_lowerbound_int, longitude_upperbound_int,
     )
 
     # Parallel computation for each tensor
-    TxxEGM96 = Parallel(n_jobs=-1)(
-        delayed(compute_row_generic)(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Txx_function)
-        for i in range(phi_mesh.shape[0])
-    )
+    # TxxEGM96 = Parallel(n_jobs=-1)(
+    #     delayed(compute_row_generic)(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Txx_function)
+    #     for i in range(phi_mesh.shape[0])
+    # )
+    # TxxEGM96 = np.array(TxxEGM96)
+    #
+    # TxyEGM96 = Parallel(n_jobs=-1)(
+    #     delayed(compute_row_generic)(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Txy_function)
+    #     for i in range(phi_mesh.shape[0])
+    # )
+    # TxyEGM96 = np.array(TxyEGM96)
+    #
+    # TxzEGM96 = Parallel(n_jobs=-1)(
+    #     delayed(compute_row_generic)(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Txz_function)
+    #     for i in range(phi_mesh.shape[0])
+    # )
+    # TxzEGM96 = np.array(TxzEGM96)
+    #
+    # TyyEGM96 = Parallel(n_jobs=-1)(
+    #     delayed(compute_row_generic)(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Tyy_function)
+    #     for i in range(phi_mesh.shape[0])
+    # )
+    # TyyEGM96 = np.array(TyyEGM96)
+    #
+    # TyzEGM96 = Parallel(n_jobs=-1)(
+    #     delayed(compute_row_generic)(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Tyz_function)
+    #     for i in range(phi_mesh.shape[0])
+    # )
+    # TyzEGM96 = np.array(TyzEGM96)
+    #
+    # TzzEGM96 = Parallel(n_jobs=-1)(
+    #     delayed(compute_row_generic)(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Tzz_function)
+    #     for i in range(phi_mesh.shape[0])
+    # )
+    # TzzEGM96 = np.array(TzzEGM96)
+
+    TxxEGM96 = [compute_row_generic(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Txx_function)
+                for i in range(phi_mesh.shape[0])]
     TxxEGM96 = np.array(TxxEGM96)
 
-    TxyEGM96 = Parallel(n_jobs=-1)(
-        delayed(compute_row_generic)(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Txy_function)
-        for i in range(phi_mesh.shape[0])
-    )
+    TxyEGM96 = [compute_row_generic(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Txy_function)
+               for i in range(phi_mesh.shape[0])]
     TxyEGM96 = np.array(TxyEGM96)
 
-    TxzEGM96 = Parallel(n_jobs=-1)(
-        delayed(compute_row_generic)(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Txz_function)
-        for i in range(phi_mesh.shape[0])
-    )
+    TxzEGM96 = [compute_row_generic(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Txz_function)
+               for i in range(phi_mesh.shape[0])]
     TxzEGM96 = np.array(TxzEGM96)
 
-    TyyEGM96 = Parallel(n_jobs=-1)(
-        delayed(compute_row_generic)(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Tyy_function)
-        for i in range(phi_mesh.shape[0])
-    )
+    TyyEGM96 = [compute_row_generic(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Tyy_function)
+               for i in range(phi_mesh.shape[0])]
     TyyEGM96 = np.array(TyyEGM96)
 
-    TyzEGM96 = Parallel(n_jobs=-1)(
-        delayed(compute_row_generic)(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Tyz_function)
-        for i in range(phi_mesh.shape[0])
-    )
+    TyzEGM96 = [compute_row_generic(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Tyz_function)
+               for i in range(phi_mesh.shape[0])]
     TyzEGM96 = np.array(TyzEGM96)
 
-    TzzEGM96 = Parallel(n_jobs=-1)(
-        delayed(compute_row_generic)(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Tzz_function)
-        for i in range(phi_mesh.shape[0])
-    )
+    TzzEGM96 = [compute_row_generic(i, r[i], phi_mesh[i], lambda_mesh[i], maximum_of_counter, Tzz_function)
+               for i in range(phi_mesh.shape[0])]
     TzzEGM96 = np.array(TzzEGM96)
+
+    # with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
+    #     TxxEGM96 = pool.starmap(wrapper_compute_row_generic,
+    #                             [(i, Txx_function, r, phi_mesh, lambda_mesh, maximum_of_counter) for i in
+    #                              range(phi_mesh.shape[0])])
+    #     TxyEGM96 = pool.starmap(wrapper_compute_row_generic,
+    #                             [(i, Txy_function, r, phi_mesh, lambda_mesh, maximum_of_counter) for i in
+    #                              range(phi_mesh.shape[0])])
+    #     TxzEGM96 = pool.starmap(wrapper_compute_row_generic,
+    #                             [(i, Txz_function, r, phi_mesh, lambda_mesh, maximum_of_counter) for i in
+    #                              range(phi_mesh.shape[0])])
+    #     TyyEGM96 = pool.starmap(wrapper_compute_row_generic,
+    #                             [(i, Tyy_function, r, phi_mesh, lambda_mesh, maximum_of_counter) for i in
+    #                              range(phi_mesh.shape[0])])
+    #     TyzEGM96 = pool.starmap(wrapper_compute_row_generic,
+    #                             [(i, Tyz_function, r, phi_mesh, lambda_mesh, maximum_of_counter) for i in
+    #                              range(phi_mesh.shape[0])])
+    #     TzzEGM96 = pool.starmap(wrapper_compute_row_generic,
+    #                             [(i, Tzz_function, r, phi_mesh, lambda_mesh, maximum_of_counter) for i in
+    #                              range(phi_mesh.shape[0])])
+    #
+    # # تبدیل لیست‌ها به آرایه numpy
+    # TxxEGM96 = np.array(TxxEGM96)
+    # TxyEGM96 = np.array(TxyEGM96)
+    # TxzEGM96 = np.array(TxzEGM96)
+    # TyyEGM96 = np.array(TyyEGM96)
+    # TyzEGM96 = np.array(TyzEGM96)
+    # TzzEGM96 = np.array(TzzEGM96)
 
     # Export each EGM96 matrix to CSV
     def export_matrix(filename, matrix):
